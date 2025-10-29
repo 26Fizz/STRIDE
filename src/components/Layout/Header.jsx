@@ -1,4 +1,3 @@
-// src/components/Layout/Header.jsx
 import React from 'react';
 import { MenuIcon, XIcon } from '../../icons/icons';
 import { useAuth } from "../../hooks/useAuth";
@@ -26,26 +25,27 @@ const Header = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-lg">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <h1 
-          onClick={() => handleNavClick('Home')} 
-          className="text-xl sm:text-2xl font-extrabold text-blue-600 tracking-tight cursor-pointer"
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white/10 transition-all duration-300">
+      <div className="container mx-auto px-5 py-3 flex justify-between items-center">
+        {/* Brand */}
+        <h1
+          onClick={() => handleNavClick('Home')}
+          className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight cursor-pointer select-none"
         >
-          Monday<span className="text-yellow-500">Momentum</span>
+          STRIDE<span className="text-red-600">.</span>
         </h1>
 
         {/* Desktop Navigation */}
-        <nav className="hidden sm:flex items-center space-x-4 md:space-x-6 font-medium">
+        <nav className="hidden sm:flex items-center space-x-6 font-medium">
           {navItems.map((item) => (
             <button
               key={item}
               onClick={() => handleNavClick(item)}
-              className={`transition-all duration-200 text-sm sm:text-base py-1 border-b-2 
-                ${activePage === item
-                  ? 'text-blue-600 border-blue-600 font-bold'
-                  : 'text-gray-600 border-transparent hover:text-blue-500 hover:border-blue-300'
-                }`}
+              className={`transition-all duration-200 text-sm sm:text-base py-1 border-b-2 ${
+                activePage === item
+                  ? 'text-white border-red-600 font-semibold'
+                  : 'text-gray-300 border-transparent hover:text-white hover:border-gray-500'
+              }`}
             >
               {item}
             </button>
@@ -55,7 +55,7 @@ const Header = ({
           {user ? (
             <button
               onClick={handleLogout}
-              className="ml-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+              className="ml-4 px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition-all duration-300 hover:scale-105"
             >
               Logout
             </button>
@@ -63,13 +63,13 @@ const Header = ({
             <>
               <button
                 onClick={() => setIsLoginOpen(true)}
-                className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                className="ml-4 px-4 py-2 bg-white text-black rounded-full hover:bg-gray-200 transition-all duration-300"
               >
                 Login
               </button>
               <button
                 onClick={() => setIsSignupOpen(true)}
-                className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition"
+                className="px-4 py-2 border border-red-600 text-red-600 rounded-full hover:bg-red-600 hover:text-white transition-all duration-300"
               >
                 Signup
               </button>
@@ -78,26 +78,30 @@ const Header = ({
         </nav>
 
         {/* Mobile Menu Button */}
-        <button 
+        <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="sm:hidden p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-md"
+          className="sm:hidden p-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition shadow-md"
         >
           {isMobileMenuOpen ? <XIcon className="w-5 h-5" /> : <MenuIcon className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div className="sm:hidden fixed inset-0 top-16 bg-white z-40 flex flex-col items-center py-8 space-y-4">
+      {/* Mobile Dropdown Menu */}
+      <div
+        className={`sm:hidden absolute left-0 right-0 top-full bg-black border-t border-white/10 transition-all duration-300 overflow-hidden ${
+          isMobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="flex flex-col items-center py-6 space-y-4">
           {navItems.map((item) => (
             <button
               key={item}
               onClick={() => handleNavClick(item)}
-              className={`text-xl font-bold py-3 w-3/4 rounded-lg transition-colors
-                ${activePage === item
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'text-gray-800 hover:bg-gray-100'
-                }`}
+              className={`text-lg font-medium py-2 w-3/4 rounded-md transition-all ${
+                activePage === item
+                  ? 'bg-red-600 text-white shadow-md'
+                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+              }`}
             >
               {item}
             </button>
@@ -106,28 +110,34 @@ const Header = ({
           {user ? (
             <button
               onClick={handleLogout}
-              className="text-xl font-bold py-3 w-3/4 rounded-lg bg-red-600 text-white hover:bg-red-700 shadow-lg"
+              className="text-lg font-semibold py-2 w-3/4 rounded-md bg-red-600 text-white hover:bg-red-700 transition-all"
             >
               Logout
             </button>
           ) : (
             <>
               <button
-                onClick={() => { setIsLoginOpen(true); setIsMobileMenuOpen(false); }}
-                className="text-xl font-bold py-3 w-3/4 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-lg"
+                onClick={() => {
+                  setIsLoginOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium py-2 w-3/4 rounded-md bg-white text-black hover:bg-gray-200 transition-all"
               >
                 Login
               </button>
               <button
-                onClick={() => { setIsSignupOpen(true); setIsMobileMenuOpen(false); }}
-                className="text-xl font-bold py-3 w-3/4 rounded-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white shadow-lg"
+                onClick={() => {
+                  setIsSignupOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-lg font-medium py-2 w-3/4 rounded-md border border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition-all"
               >
                 Signup
               </button>
             </>
           )}
         </div>
-      )}
+      </div>
     </header>
   );
 };

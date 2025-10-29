@@ -25,3 +25,13 @@ h1, h2, h3, h4 {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+
+@keyframes textShine {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.animate-text {
+  background-size: 200% auto;
+  animation: textShine 5s linear infinite alternate;
+}

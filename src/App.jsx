@@ -16,6 +16,9 @@ import SignupModal from './Auth/SignupModal';
 import LoginModal from './Auth/LoginModal';
 import { useAuth } from './hooks/useAuth';
 
+// ✅ NEW IMPORT
+import Leaderboard from './components/Leaderboard/Leaderboard';
+
 const App = () => {
   const [activePage, setActivePage] = useState('Home');
   const [isSimulatingMonday, setIsSimulatingMonday] = useState(false);
@@ -40,16 +43,19 @@ const App = () => {
     setIsMobileMenuOpen(false);
   }, []);
 
-  const handleUnlockSummary = useCallback((bookId, amount) => {
-    setUnlockedSummaries(prev => ({
-      ...prev,
-      [bookId]: { unlockedAt: Date.now(), amount: amount }
-    }));
-    navigate('My Summaries');
-  }, [navigate]);
+  const handleUnlockSummary = useCallback(
+    (bookId, amount) => {
+      setUnlockedSummaries((prev) => ({
+        ...prev,
+        [bookId]: { unlockedAt: Date.now(), amount: amount },
+      }));
+      navigate('My Summaries');
+    },
+    [navigate]
+  );
 
   const toggleSimulateMonday = () => {
-    setIsSimulatingMonday(prev => !prev);
+    setIsSimulatingMonday((prev) => !prev);
   };
 
   const renderPage = () => {
@@ -58,7 +64,7 @@ const App = () => {
         return <HowItWorksSection />;
       case 'Donate':
         return (
-          <DonationPanel 
+          <DonationPanel
             onUnlockSummary={handleUnlockSummary}
             isDonationActive={isDonationTime}
             isSimulatingMonday={isSimulatingMonday}
@@ -74,6 +80,8 @@ const App = () => {
         return (
           <>
             <HeroSection navigate={navigate} />
+            {/* ✅ Added Leaderboard directly below Hero */}
+            <Leaderboard />
             <HowItWorksSection />
           </>
         );
@@ -87,9 +95,9 @@ const App = () => {
         .font-inter { font-family: 'Inter', sans-serif; }
         .shadow-3xl { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); }
         @media (min-width: 420px) {
-            .xs\\:grid-cols-3 {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
+          .xs\\:grid-cols-3 {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
         }
       `}</style>
 
@@ -99,18 +107,16 @@ const App = () => {
         activePage={activePage}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
-        setIsSignupOpen={setIsSignupOpen} // pass modal setters
+        setIsSignupOpen={setIsSignupOpen}
         setIsLoginOpen={setIsLoginOpen}
       />
 
-      {/* Modals rendered outside header */}
+      {/* Modals */}
       {isSignupOpen && <SignupModal closeModal={() => setIsSignupOpen(false)} />}
       {isLoginOpen && <LoginModal closeModal={() => setIsLoginOpen(false)} />}
 
       {/* Main Content */}
-      <main className="pt-14 sm:pt-16">
-        {renderPage()}
-      </main>
+      <main className="pt-14 sm:pt-16">{renderPage()}</main>
 
       <Footer />
     </div>
