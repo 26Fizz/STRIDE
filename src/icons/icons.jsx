@@ -1,5 +1,40 @@
 // src/icons/icons.js
 
+// src/icons/icons.jsx
+import {
+  IndianRupee,
+  DollarSign,
+  Loader2,
+  BookOpen,
+  CalendarDays,
+  ArrowRight,
+  CheckCircle2,
+  XCircle,
+  User,
+  LogOut,
+  LogIn,
+} from "lucide-react";
+
+// 💰 Currency icons
+export const IndianRupeeIcon = (props) => <IndianRupee {...props} />;
+
+
+// 🔄 Loader
+
+
+// 📚 Misc icons
+
+export const CalendarIcon = (props) => <CalendarDays {...props} />;
+export const ArrowRightIcon = (props) => <ArrowRight {...props} />;
+export const SuccessIcon = (props) => <CheckCircle2 {...props} />;
+export const ErrorIcon = (props) => <XCircle {...props} />;
+
+// 👤 Auth-related icons
+export const UserIcon = (props) => <User {...props} />;
+export const LogoutIcon = (props) => <LogOut {...props} />;
+export const LoginIcon = (props) => <LogIn {...props} />;
+
+
 export const BookIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 0 0 5H20M12 7h6M12 11h6M12 15h6"/></svg>
 );
@@ -21,3 +56,4 @@ export const MenuIcon = (props) => (
 export const XIcon = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
 );
+

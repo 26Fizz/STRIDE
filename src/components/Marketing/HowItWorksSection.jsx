@@ -1,36 +1,79 @@
-// src/components/Marketing/HowItWorksSection.jsx
-import React from 'react';
-import { DollarSignIcon, BookIcon, TrendingUpIcon } from '../../icons/icons';
+import React from "react";
+import { motion } from "framer-motion";
+import { Heart, BookOpen, Sparkles } from "lucide-react";
 
-const HowItWorksSection = () => {
-    const steps = [
-      { icon: DollarSignIcon, title: "The Monday Pledge", description: "Make a youth-focused donation (any amount) exclusively on a Monday." },
-      { icon: BookIcon, title: "Choose Your Knowledge", description: "Select one of the five available premium book summaries as your personalized reward." },
-      { icon: TrendingUpIcon, title: "Fuel Your Week", description: "Read the key insights, apply the knowledge, and drive real-world impact with your contribution." },
-    ];
-  
-    return (
-      <section id="how-it-works" className="py-12 sm:py-16 bg-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">How It Works</h2>
-          <p className="text-base sm:text-xl text-gray-600 mb-10 sm:mb-12">A simple, impactful cycle of giving and gaining.</p>
-  
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
-            {steps.map((step, index) => (
-              <div key={index} className="p-6 rounded-xl shadow-lg border-t-4 border-blue-500 bg-white transition duration-300 hover:shadow-2xl hover:scale-[1.01]">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-blue-50 text-blue-600 rounded-full inline-block">
-                    <step.icon className="w-6 h-6"/>
-                  </div>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">{step.title}</h3>
-                <p className="text-sm sm:text-base text-gray-500">{step.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
+const steps = [
+  {
+    id: 1,
+    icon: <Heart className="w-8 h-8 text-emerald-400" />,
+    title: "You Donate",
+    desc: "Each Monday, you contribute ₹10 — a small but consistent act that shapes bigger change.",
+  },
+  {
+    id: 2,
+    icon: <BookOpen className="w-8 h-8 text-emerald-400" />,
+    title: "We Curate Wisdom",
+    desc: "Our team handpicks five timeless books and delivers a 3-minute capsule of insight each week.",
+  },
+  {
+    id: 3,
+    icon: <Sparkles className="w-8 h-8 text-emerald-400" />,
+    title: "You Grow Weekly",
+    desc: "With every Monday read, you sharpen your mind and fuel a movement of thoughtful change.",
+  },
+];
+
+const HowWeWorkSection = () => {
+  return (
+    <section className="relative bg-black text-white py-24 px-6 overflow-hidden">
+      {/* 🌫️ Subtle background depth gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(20,83,45,0.08),_transparent_70%)] pointer-events-none" />
+
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+        className="text-center max-w-2xl mx-auto mb-16 relative z-10"
+      >
+        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-100 via-emerald-300 to-gray-100">
+          How STRIDE Works.
+        </h2>
+        <p className="mt-4 text-gray-400 text-base sm:text-lg leading-relaxed">
+          Simple. Consistent. Transformative. Every Monday, your small action sets big ideas in motion.
+        </p>
+      </motion.div>
+
+      {/* Steps */}
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        {steps.map((step, index) => (
+          <motion.div
+            key={step.id}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: index * 0.15, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="group bg-[#0e0e0e] hover:bg-[#121212] border border-gray-800 hover:border-emerald-500/30 rounded-2xl p-8 text-center transition-all duration-300"
+          >
+            {/* Icon */}
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/10 group-hover:bg-emerald-500/20 mx-auto mb-6 transition-all duration-300">
+              {step.icon}
+            </div>
+
+            {/* Title */}
+            <h3 className="text-xl font-semibold text-gray-100 mb-3">{step.title}</h3>
+
+            {/* Description */}
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{step.desc}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Accent underline */}
+      <div className="relative z-10 mt-20 w-24 h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent mx-auto rounded-full opacity-40" />
+    </section>
+  );
 };
 
-export default HowItWorksSection;
+export default HowWeWorkSection;

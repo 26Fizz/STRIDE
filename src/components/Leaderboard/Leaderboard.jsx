@@ -59,7 +59,7 @@ const Leaderboard = () => {
       <div className="max-w-5xl mx-auto text-center">
         <h2 className="text-2xl sm:text-3xl font-bold mb-8 flex items-center justify-center gap-2">
           <Trophy className="text-yellow-400 w-7 h-7 sm:w-8 sm:h-8" />
-          Weekly Impact Leaderboard
+          The STRIDE Impact Leaderboard
         </h2>
 
         {/* 🔥 Table Wrapper for Mobile Scrolling */}
@@ -147,12 +147,12 @@ const Leaderboard = () => {
         {/* ℹ️ Impact Points Note */}
         <div className="mt-8 text-gray-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
           <p>
-            <strong className="text-white">Impact Points (IP)</strong> reward consistent generosity.{" "}
-            Every{" "}
-            <span className="text-orange-400 font-semibold">4-week donation streak</span>{" "}
-            earns{" "}
+            <strong className="text-white">Impact Points (IP)</strong>{" "}
+            Every 4 Mondays of consistency earns you{" "}
+            <span className="text-orange-400 font-semibold"></span>{" "}
+            {" "}
             <span className="text-yellow-400 font-semibold">+1 Impact Point</span>.{" "}
-            Keep your streak alive to climb the leaderboard and inspire others!
+            a mark of consistency, purpose, and quite rebellion.
           </p>
         </div>
       </div>
