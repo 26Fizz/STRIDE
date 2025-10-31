@@ -103,7 +103,7 @@ const TermsConditions = () => {
               STRIDE shall not be liable for indirect or consequential losses
               resulting from third-party errors, delays, or unavoidable
               technical issues. Payments are securely handled by verified
-              partners like Instamojo and Firebase-backed infrastructure.
+              partners like Razorpay and Firebase-backed infrastructure.
             </p>
           </section>
 
@@ -124,7 +124,7 @@ const TermsConditions = () => {
           <p className="text-gray-400">
             For any questions regarding these Terms, please contact us at{" "}
             <span className="text-emerald-400 font-semibold">
-              support@strideimpact.in
+              connect@strideindia.in
             </span>
             .
           </p>
