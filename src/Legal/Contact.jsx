@@ -51,10 +51,10 @@ const Contact = () => {
             <Mail className="w-8 h-8 mx-auto text-emerald-400 mb-3" />
             <h3 className="text-lg font-semibold text-white mb-2">Support Email</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              <span className="text-emerald-400 font-medium">support@strideimpact.in</span>
+              <span className="text-emerald-400 font-medium">connect@strideindia.in</span>
               <br />
               or <br />
-              <span className="text-emerald-400 font-medium">support@strideindia.org</span>
+              <span className="text-emerald-400 font-medium">connect@strideindia.in</span>
             </p>
           </motion.div>
 
@@ -66,7 +66,7 @@ const Contact = () => {
             <Phone className="w-8 h-8 mx-auto text-emerald-400 mb-3" />
             <h3 className="text-lg font-semibold text-white mb-2">Helpline</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              📞 +91 98765 43210 <br />
+              📞 +91 94811 11786 <br />
               Mon – Fri, 10 AM to 6 PM
             </p>
           </motion.div>
@@ -84,7 +84,7 @@ const Contact = () => {
               <UserCheck className="inline w-4 h-4 mr-1 text-emerald-400" />
               <span className="font-medium text-white">Mr. Hafiz Patel</span> (Founder, STRIDE Ventures)
               <br />
-              📧 <span className="text-emerald-400">grievance@strideimpact.in</span>
+              📧 <span className="text-emerald-400">connect@strideindia.in</span>
               <br />
               All complaints are acknowledged within{" "}
               <span className="text-emerald-400">7 working days</span>.
@@ -101,7 +101,7 @@ const Contact = () => {
         >
           STRIDE Ventures is a registered MSME startup initiative based in India.  
           All user data is securely handled via Firebase and compliant with Indian Data Protection Guidelines.  
-          Payments are processed through verified partners such as <span className="text-emerald-400">Instamojo</span>.
+          Payments are processed through verified partners such as <span className="text-emerald-400">RazorPay</span>.
         </motion.p>
       </section>
     </PageWrapper>
