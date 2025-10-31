@@ -42,7 +42,7 @@ const RefundPolicy = () => {
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
               Once a user completes a payment through{" "}
-              <span className="text-emerald-400">Instamojo</span> or any official
+              <span className="text-emerald-400">Razorpay</span> or any official
               STRIDE link, the transaction is considered final and cannot be
               reversed. All funds directly contribute to verified impact
               programs and digital content delivery.
@@ -63,12 +63,12 @@ const RefundPolicy = () => {
             </p>
             <ul className="list-disc list-inside text-gray-400 text-sm mt-2 space-y-1">
               <li>Duplicate payments made accidentally (with proof).</li>
-              <li>Technical transaction errors verified by Instamojo.</li>
+              <li>Technical transaction errors verified by Razorpay.</li>
             </ul>
             <p className="text-gray-400 text-sm mt-3 italic">
               Please email{" "}
               <span className="text-emerald-400 font-medium">
-                billing@strideimpact.in
+               connect@strideindia.in
               </span>{" "}
               within 7 days of the transaction to request a review.
             </p>
@@ -103,7 +103,7 @@ const RefundPolicy = () => {
             <p className="text-gray-400 text-sm leading-relaxed">
               Any payment-related disputes or chargebacks will be handled in
               accordance with{" "}
-              <span className="text-emerald-400 font-medium">Instamojo’s</span>{" "}
+              <span className="text-emerald-400 font-medium">Razorpay’s</span>{" "}
               standard dispute resolution policy. STRIDE will fully cooperate to
               ensure fair and transparent resolution.
             </p>
@@ -119,11 +119,11 @@ const RefundPolicy = () => {
         >
           For refund or billing queries, reach out to our support team at{" "}
           <span className="text-emerald-400 font-medium">
-            billing@strideimpact.in
+           connect@strideindia.in
           </span>{" "}
           or{" "}
           <span className="text-emerald-400 font-medium">
-            support@strideimpact.in
+           connect@strideindia.in
           </span>
           .  
           STRIDE Ventures (India) ensures every rupee is used responsibly and
