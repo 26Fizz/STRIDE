@@ -2,12 +2,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Play, Users, BookOpen, Heart, IndianRupee } from "lucide-react";
-
-// 🧱 Dummy weekly data
+import { useNavigate } from "react-router-dom";
 import { IMPACT_WEEKS } from "../data/impactData";
 
-
 const ImpactPage = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="min-h-screen bg-black text-white pt-24 sm:pt-28 pb-20 px-4 sm:px-6">
       {/* 🌟 Hero Section */}
@@ -152,7 +152,7 @@ const ImpactPage = () => {
           Join thousands who take their STRIDE every Monday — your donation fuels the next chapter.
         </p>
         <button
-          onClick={() => (window.location.href = "/donate")}
+          onClick={() => navigate("/donate")}
           className="px-5 sm:px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white transition-all hover:scale-105"
         >
           Take Your STRIDE →
