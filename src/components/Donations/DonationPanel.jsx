@@ -1,5 +1,5 @@
-// src/components/Donation/DonationPanel.jsx
-import React, { useState, useMemo } from "react";
+// ✅ src/components/Donation/DonationPanel.jsx
+import React, { useState, useMemo, useEffect } from "react";
 import { BOOK_MAP } from "../../data/books";
 import { getDayInfo } from "../../utils/date";
 import DayToggle from "./DayToggle";
@@ -8,7 +8,7 @@ import PledgeAmountInput from "./PledgeAmountInput";
 import { IndianRupeeIcon, LoaderIcon } from "../../icons/icons";
 import { useAuth } from "../../hooks/useAuth";
 import { unlockSummary } from "../../Firebase/firestoreHelpers";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DonationPanel = ({
   isDonationActive,
@@ -21,10 +21,78 @@ const DonationPanel = ({
   const [amount, setAmount] = useState(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState(null);
+  const [quoteIndex, setQuoteIndex] = useState(0);
 
   const authUser = useAuth();
   const { dayName, dateString } = useMemo(() => getDayInfo(), []);
   const selectedBook = BOOK_MAP[selectedBookId];
+
+  // 🧠 STRIDE IMPACT QUOTES
+  const IMPACT_QUOTES = [
+    // A — Meaning & Modern Life
+    "Some days build your resume. Mondays build your character.",
+    "STRIDE is how you stay human in a world that keeps numbing you.",
+    "The world doesn’t change on Mondays — but you slowly do.",
+    "Every STRIDE is a vote for the person you want to become.",
+    "Purpose isn’t found. It’s practiced.",
+
+    // B — Habit, Discipline & Micro-Impact
+    "Goodness is hard only until it becomes routine.",
+    "You don’t need motivation when you have a ritual — STRIDE is that ritual.",
+    "Small disciplined acts create disproportionate lives.",
+    "Impact is a rhythm. STRIDE sets the tempo.",
+    "Your Mondays are tiny — but what they shape isn’t.",
+
+    // C — Youth & Emotional Reality
+    "Our generation isn’t lost — just directionless. STRIDE gives direction.",
+    "You’re not too young to matter. You’re too young to wait.",
+    "STRIDE is for everyone who feels ‘I want to help, but I don’t know how.’",
+    "If you’ve ever felt powerless, this is your daily antidote.",
+    "Overthinking creates fear. Small actions create identity.",
+
+    // D — India & Collective Culture
+    "Movements don’t start big — they start weekly.",
+    "When you STRIDE, you add one more heartbeat to India’s change.",
+    "Not all patriotism is loud. Some of it costs ₹10 on a Monday.",
+    "India doesn’t need heroes. It needs habits.",
+    "Imagine a country that shows up together. That’s what STRIDE is building.",
+
+    // E — Psychology & Modern Life
+    "We’re drowning in noise. STRIDE is one clean signal.",
+    "Your brain needs meaning the way your body needs water.",
+    "Scrolling numbs you. STRIDE awakens you.",
+    "Consistency is the new confidence.",
+    "If discipline had a softer side, it would look like STRIDE.",
+
+    // F — Philosophy & Depth
+    "A meaningful life is built in quiet Mondays.",
+    "Peace comes from knowing you showed up.",
+    "Every STRIDE is a small prayer in motion.",
+    "Impact is not a destination — it’s a posture.",
+    "Who you are is shaped by what you show up for.",
+
+    // STRIDE Core
+    "STRIDE makes doing good feel natural, not forced.",
+    "You’re not donating. You’re calibrating your identity.",
+    "STRIDE is what people with quiet strength do.",
+    "This isn’t philanthropy — it’s self-respect.",
+    "STRIDE is how you stay anchored in a world that keeps shaking you.",
+    "We turned goodwill into a weekly ritual anyone can hold.",
+    "You don’t STRIDE for applause. You STRIDE for alignment.",
+    "STRIDE is a rebellion against apathy — gentle, but firm.",
+    "Goodness needs a system. Not a mood.",
+    "If you feel lost, STRIDE gives you a small place to begin.",
+  ];
+
+  // ⏳ Cycle through quotes every 5 seconds (only when not Monday)
+  useEffect(() => {
+    if (!isDonationActive) {
+      const interval = setInterval(() => {
+        setQuoteIndex((prev) => (prev + 1) % IMPACT_QUOTES.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isDonationActive]);
 
   const handleDonateClick = async () => {
     setMessage(null);
@@ -38,7 +106,7 @@ const DonationPanel = ({
       return;
     }
     if (!amount || amount < 1) {
-      setMessage({ type: "error", text: "Please enter a valid amount (minimum ₹10." });
+      setMessage({ type: "error", text: "Please enter a valid amount (minimum ₹10)." });
       return;
     }
     if (!authUser) {
@@ -72,11 +140,10 @@ const DonationPanel = ({
       <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-green-400/20 blur-[160px] rounded-full"></div>
       <div className="absolute bottom-[-15%] right-[-10%] w-[450px] h-[450px] bg-emerald-500/20 blur-[180px] rounded-full"></div>
 
-      {/* Content Container */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8 }}
         className="relative z-10 w-full max-w-4xl"
       >
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-4">
@@ -86,7 +153,6 @@ const DonationPanel = ({
           Every Monday, STRIDE drops a real cause. You donate ₹10 and unlock 3 minutes of wisdom that changes how you think, while changing how someone lives.
         </p>
 
-        {/* Day Toggle */}
         <div className="mb-8">
           <DayToggle
             isSimulatingMonday={isSimulatingMonday}
@@ -96,71 +162,106 @@ const DonationPanel = ({
           />
         </div>
 
-        {/* Main Card */}
+        {/* 💬 Non-Monday Section with Rotating Quotes */}
+        {!isDonationActive && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-gradient-to-b from-gray-900/60 to-black/80 backdrop-blur-lg border border-gray-800 rounded-3xl shadow-xl p-8 sm:p-10 mb-10"
+          >
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4">
+              🚫 Donations open every Monday
+            </h3>
+
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={quoteIndex}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.6 }}
+                className="text-emerald-400 italic text-base sm:text-lg max-w-2xl mx-auto leading-relaxed"
+              >
+                “{IMPACT_QUOTES[quoteIndex]}”
+              </motion.p>
+            </AnimatePresence>
+
+            <p className="text-gray-400 text-sm mt-4">
+              STRIDE isn’t built around urgency — it’s built around rhythm.  
+              Every Monday, our community moves in sync to make small consistent change.
+            </p>
+          </motion.div>
+        )}
+
+        {/* 💸 Donation Card */}
         <div className="bg-[#0e0e0e]/70 backdrop-blur-xl border border-gray-800 rounded-3xl shadow-2xl p-8 sm:p-12 space-y-10">
-          {/* Step 1: Book Selection */}
           <div>
-            <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-100">1️⃣ Select Your Read</h3>
-            <BookSelectionGrid selectedBookId={selectedBookId} setSelectedBookId={setSelectedBookId} />
+            <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-100">
+              1️⃣ Select Your Read
+            </h3>
+            <BookSelectionGrid
+              selectedBookId={selectedBookId}
+              setSelectedBookId={setSelectedBookId}
+            />
           </div>
 
-          {/* Step 2: Pledge Amount */}
           <div>
-            <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-100">2️⃣ This Monday, Create Real Impact</h3>
+            <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-100">
+              2️⃣ This Monday, Create Real Impact
+            </h3>
             <PledgeAmountInput amount={amount} setAmount={setAmount} />
           </div>
 
+          {/* 🔘 Donate Button */}
           <div className="mt-8 flex justify-center">
-  <button
-    onClick={() => {
-      if (!isProcessing && amount < 10) {
-        alert("⚠️ Minimum donation amount is ₹10. Please increase your pledge.");
-        return;
-      }
-      handleDonateClick();
-    }}
-    disabled={isDisabled || isProcessing}
-    className={`relative w-full max-w-md flex items-center justify-center gap-2 py-4 text-lg font-semibold rounded-xl transition-all duration-300 overflow-hidden
-      ${
-        isDisabled
-          ? "bg-gray-800 text-gray-500 cursor-not-allowed"
-          : "bg-red-600 text-white hover:scale-[1.03] shadow-lg hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]"
-      }`}
-  >
-    {isProcessing ? (
-      <>
-        <LoaderIcon className="animate-spin h-5 w-5 text-white" />
-        Processing Donation...
-      </>
-    ) : (
-      <>
-        <IndianRupeeIcon className="h-5 w-5" />
-        {`Take Your STRIDE`}
-      </>
-    )}
+            <button
+              onClick={() => {
+                if (!isProcessing && amount < 10 && isDonationActive) {
+                  alert("⚠️ Minimum donation amount is ₹10. Please increase your pledge.");
+                  return;
+                }
+                handleDonateClick();
+              }}
+              disabled={isDisabled || isProcessing}
+              className={`relative w-full max-w-md flex items-center justify-center gap-2 py-4 text-lg font-semibold rounded-xl transition-all duration-300 overflow-hidden
+                ${
+                  isDisabled
+                    ? "bg-gray-800 text-gray-500 cursor-not-allowed shadow-[0_0_20px_rgba(239,68,68,0.15)]"
+                    : "bg-red-600 text-white hover:scale-[1.03] shadow-lg hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]"
+                }`}
+            >
+              {isProcessing ? (
+                <>
+                  <LoaderIcon className="animate-spin h-5 w-5 text-white" />
+                  Processing Donation...
+                </>
+              ) : (
+                <>
+                  <IndianRupeeIcon className="h-5 w-5" />
+                  {isDonationActive ? "Take Your STRIDE" : "We'll see you on Monday 🌿"}
+                </>
+              )}
 
-    {/* ✨ Soft glare shimmer effect */}
-    {!isDisabled && (
-      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-glare pointer-events-none" />
-    )}
-  </button>
+              {!isDisabled && (
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-glare pointer-events-none" />
+              )}
+            </button>
 
-  {/* Glare Animation */}
-  <style>
-    {`
-      @keyframes glareMove {
-        0% { transform: translateX(-100%); }
-        50% { transform: translateX(100%); }
-        100% { transform: translateX(100%); }
-      }
-      .animate-glare {
-        animation: glareMove 4s ease-in-out infinite;
-      }
-    `}
-  </style>
-</div>
+            <style>
+              {`
+                @keyframes glareMove {
+                  0% { transform: translateX(-100%); }
+                  50% { transform: translateX(100%); }
+                  100% { transform: translateX(100%); }
+                }
+                .animate-glare {
+                  animation: glareMove 4s ease-in-out infinite;
+                }
+              `}
+            </style>
+          </div>
 
-          {/* Message */}
           {message && (
             <div
               className={`mt-4 text-sm px-4 py-2 rounded-lg ${

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 const PledgeAmountInput = ({ amount, setAmount }) => {
   const presetAmounts = [10, 50, 100, 250, "custom"];
-  const isCustomSelected = !presetAmounts.includes(amount);
+  const [isCustomSelected, setIsCustomSelected] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {
@@ -13,6 +13,16 @@ const PledgeAmountInput = ({ amount, setAmount }) => {
       setShowWarning(false);
     }
   }, [amount, isCustomSelected]);
+
+  const handlePresetClick = (val) => {
+    if (val === "custom") {
+      setIsCustomSelected(true);
+      setAmount("");
+    } else {
+      setIsCustomSelected(false);
+      setAmount(val);
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -25,10 +35,10 @@ const PledgeAmountInput = ({ amount, setAmount }) => {
         {presetAmounts.map((val) => (
           <button
             key={val}
-            onClick={() => setAmount(val === "custom" ? "" : val)}
+            onClick={() => handlePresetClick(val)}
             className={`py-3 rounded-xl border text-base font-medium transition-all duration-200 hover:scale-[1.02]
               ${
-                (val === "custom" && isCustomSelected) || amount === val
+                (val === "custom" && isCustomSelected) || (!isCustomSelected && amount === val)
                   ? "bg-emerald-500 text-white border-transparent shadow-[0_0_15px_rgba(16,185,129,0.4)]"
                   : "bg-[#111] text-gray-300 border-gray-700 hover:border-emerald-400/60 hover:text-white"
               }`}
