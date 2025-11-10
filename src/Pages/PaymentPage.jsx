@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../Firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
-import qrImage from "../assets/qr.jpg"; // ✅ ensure this image exists
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -46,16 +45,16 @@ const PaymentPage = () => {
     const upiLink = `upi://pay?pa=strideventures@ybl&pn=Stride%20India&am=${amount}&cu=INR`;
 
     if (isMobile) {
-      window.location.href = upiLink; // redirects directly to app on mobile
+      window.location.href = upiLink; // opens UPI app directly
     } else {
-      // On desktop, show QR instead
-      setShowQR(true);
+      setShowQR(true); // desktop → show QR
     }
   };
 
+  // ✅ Allow users to save the QR from public folder
   const handleSaveQR = () => {
     const link = document.createElement("a");
-    link.href = qrImage;
+    link.href = "/qr.jpg";
     link.download = "Stride_UPI_QR.jpg";
     link.click();
   };
@@ -70,7 +69,7 @@ const PaymentPage = () => {
           Every Monday donation helps unlock knowledge for someone new 📚
         </p>
 
-        {/* ✅ Donor Info Section */}
+        {/* ✅ Donor Info */}
         {loadingUser ? (
           <p className="text-gray-400 mb-8">Loading your details...</p>
         ) : currentUser && userInfo ? (
@@ -96,7 +95,7 @@ const PaymentPage = () => {
           </p>
         )}
 
-        {/* ✅ Payment Button */}
+        {/* ✅ Pay Button */}
         <button
           onClick={handleUPIRedirect}
           disabled={!currentUser}
@@ -112,11 +111,11 @@ const PaymentPage = () => {
         {/* 💻 Desktop note */}
         {!isMobile && (
           <p className="text-gray-400 text-sm mt-3">
-            If you're on a computer, please complete the donation using the QR below.
+            Payments from PC should be done using the QR below.
           </p>
         )}
 
-        {/* 🧾 Collapsible QR Section */}
+        {/* 🧾 QR Section */}
         {!isMobile && (
           <div className="mt-8 border-t border-white/10 pt-6">
             <button
@@ -130,7 +129,7 @@ const PaymentPage = () => {
             {showQR && (
               <div className="mt-6 animate-fadeIn">
                 <img
-                  src={qrImage}
+                  src="/qr.jpg"
                   alt="Stride UPI QR"
                   className="w-52 h-52 mx-auto rounded-lg border border-gray-700 shadow-lg mb-4"
                 />
@@ -144,10 +143,10 @@ const PaymentPage = () => {
                 </button>
 
                 <p className="text-sm text-gray-400 mt-6 leading-relaxed">
-                  💚 Donations are accepted via{" "}
-                  <span className="text-green-400">strideventures@ybl</span>{" "}
-                  (Name: <span className="text-green-400">Stride India</span>).
-                  Thank you for helping us spread reading culture every Monday 🌱
+                  💚 If the pay button doesn’t open your app, you can safely donate
+                  by scanning or saving this QR. UPI ID:{" "}
+                  <span className="text-green-400">strideventures@ybl</span> ·
+                  Trusted by readers every Monday 🌱
                 </p>
               </div>
             )}
