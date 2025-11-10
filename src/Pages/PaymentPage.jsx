@@ -66,7 +66,8 @@ const PaymentPage = () => {
 
         <h1 className="text-3xl font-bold mb-3">Confirm Your Donation</h1>
         <p className="text-gray-400 mb-8">
-          Every Monday donation helps unlock knowledge for someone new 📚
+          You're contibuting to real change.
+          Every rupee is tracked. 
         </p>
 
         {/* ✅ Donor Info */}
