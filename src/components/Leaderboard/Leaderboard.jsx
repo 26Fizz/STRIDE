@@ -1,12 +1,21 @@
-// src/components/Leaderboard/Leaderboard.jsx
 import React, { useEffect, useState } from "react";
 import { db } from "../../Firebase/firebase";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { Trophy, Instagram, Flame, Star } from "lucide-react";
 
 const Leaderboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserRank, setCurrentUserRank] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [animatedPercent, setAnimatedPercent] = useState(0);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => setCurrentUser(user));
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -21,7 +30,6 @@ const Leaderboard = () => {
           return { id: docSnap.id, ...data, strikes, impactPoints };
         });
 
-        // Sort by impact points first, then streaks
         const sorted = userData.sort(
           (a, b) => b.impactPoints - a.impactPoints || b.strikes - a.strikes
         );
@@ -29,7 +37,7 @@ const Leaderboard = () => {
         setUsers(sorted);
         setLoading(false);
 
-        // ✅ Sync IP back to Firestore if outdated
+        // Update missing/outdated impact points
         sorted.forEach(async (user) => {
           const userRef = doc(db, "users", user.id);
           const newIP = Math.floor((user.strikes || 0) / 4);
@@ -37,6 +45,19 @@ const Leaderboard = () => {
             await updateDoc(userRef, { impactPoints: newIP });
           }
         });
+
+        // Find current user's rank
+        const auth = getAuth();
+        const current = auth.currentUser;
+        if (current) {
+          const rank =
+            sorted.findIndex(
+              (u) =>
+                u.email?.toLowerCase() === current.email?.toLowerCase() ||
+                u.id === current.uid
+            ) + 1;
+          if (rank > 0) setCurrentUserRank(rank);
+        }
       } catch (error) {
         console.error("Error fetching leaderboard:", error);
         setLoading(false);
@@ -44,7 +65,36 @@ const Leaderboard = () => {
     };
 
     fetchLeaderboard();
-  }, []);
+  }, [currentUser]);
+
+  const totalUsers = users.length;
+  const userRank = currentUserRank;
+  const topUsers = users.slice(0, 11);
+
+  let percentile = null;
+  if (userRank && totalUsers > 1) {
+    const raw = ((totalUsers - userRank) / (totalUsers - 1)) * 100;
+    percentile = Math.max(1, Math.min(99, Number(raw.toFixed(1))));
+  }
+
+  // ✅ Always define hook — just run animation logic conditionally
+  useEffect(() => {
+    if (!percentile) return;
+    let start = 0;
+    const duration = 1000;
+    const stepTime = 10;
+    const steps = duration / stepTime;
+    const increment = percentile / steps;
+    const interval = setInterval(() => {
+      start += increment;
+      if (start >= percentile) {
+        start = percentile;
+        clearInterval(interval);
+      }
+      setAnimatedPercent(Number(start.toFixed(1)));
+    }, stepTime);
+    return () => clearInterval(interval);
+  }, [percentile]);
 
   if (loading) {
     return (
@@ -54,17 +104,6 @@ const Leaderboard = () => {
     );
   }
 
-  const totalUsers = users.length;
-  const top11 = users.slice(0, 11);
-  const remaining = users.slice(11);
-
-  // Helper: get percentile rank
-  const getRankPercent = (index) => {
-    if (totalUsers === 0) return "Top 100%";
-    const percentile = ((index + 1) / totalUsers) * 100;
-    return `Top ${percentile.toFixed(0)}%`;
-  };
-
   return (
     <section className="py-12 px-4 sm:px-6 bg-black text-white">
       <div className="max-w-5xl mx-auto text-center">
@@ -73,7 +112,6 @@ const Leaderboard = () => {
           The STRIDE Impact Leaderboard
         </h2>
 
-        {/* 🔥 Leaderboard Table */}
         <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-800">
           <table className="min-w-full text-left border-collapse">
             <thead className="bg-[#111] text-gray-300 text-sm sm:text-base">
@@ -81,18 +119,13 @@ const Leaderboard = () => {
                 <th className="py-3 px-3 sm:px-4 text-left">Rank</th>
                 <th className="py-3 px-3 sm:px-4 text-left">User</th>
                 <th className="py-3 px-3 sm:px-4 text-left">Instagram</th>
-                <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">
-                  Streak 🔥
-                </th>
-                <th className="py-3 px-3 sm:px-4 text-right whitespace-nowrap">
-                  Impact ⭐
-                </th>
+                <th className="py-3 px-3 sm:px-4 text-right">Streak 🔥</th>
+                <th className="py-3 px-3 sm:px-4 text-right">Impact ⭐</th>
               </tr>
             </thead>
 
             <tbody className="text-sm sm:text-base">
-              {/* 🏆 Top 11 Users */}
-              {top11.map((user, index) => (
+              {topUsers.map((user, index) => (
                 <tr
                   key={user.id}
                   className={`border-t border-gray-800 hover:bg-[#181818] transition ${
@@ -108,12 +141,10 @@ const Leaderboard = () => {
                   <td className="py-3 px-3 sm:px-4 font-semibold text-gray-400">
                     #{index + 1}
                   </td>
-
-                  <td className="py-3 px-3 sm:px-4 font-medium truncate max-w-[120px] sm:max-w-none">
+                  <td className="py-3 px-3 sm:px-4 font-medium truncate">
                     {user.username || "Unknown"}
                   </td>
-
-                  <td className="py-3 px-3 sm:px-4 text-blue-400 truncate max-w-[120px] sm:max-w-none">
+                  <td className="py-3 px-3 sm:px-4 text-blue-400 truncate">
                     {user.instagram ? (
                       <a
                         href={`https://instagram.com/${user.instagram.replace("@", "")}`}
@@ -121,85 +152,65 @@ const Leaderboard = () => {
                         rel="noreferrer"
                         className="hover:underline inline-flex items-center gap-1"
                       >
-                        <Instagram className="w-4 h-4 flex-shrink-0" />
-                        <span>{user.instagram}</span>
+                        <Instagram className="w-4 h-4" />
+                        {user.instagram}
                       </a>
                     ) : (
                       <span className="text-gray-400">N/A</span>
                     )}
                   </td>
-
-                  <td className="py-3 px-3 sm:px-4 text-right font-semibold text-orange-400 whitespace-nowrap">
-                    <Flame className="w-4 h-4 inline text-orange-500" />{" "}
-                    {user.strikes ?? 0}
+                  <td className="py-3 px-3 sm:px-4 text-right font-semibold text-orange-400">
+                    <span className="inline-flex items-center gap-1">
+                      <Flame className="w-4 h-4 text-orange-500" />
+                      {user.strikes ?? 0}
+                    </span>
                   </td>
-
-                  <td className="py-3 px-3 sm:px-4 text-right font-semibold text-yellow-400 whitespace-nowrap">
-                    <Star className="w-4 h-4 inline text-yellow-400" />{" "}
-                    {user.impactPoints ?? 0}
+                  <td className="py-3 px-3 sm:px-4 text-right font-semibold text-yellow-400">
+                    <span className="inline-flex items-center gap-1">
+                      <Star className="w-4 h-4 text-yellow-400" />
+                      {user.impactPoints ?? 0}
+                    </span>
                   </td>
                 </tr>
               ))}
-
-              {/* 👤 Everyone Else */}
-              {remaining.map((user, index) => {
-                const rank = index + 12; // since first 11 are shown
-                return (
-                  <tr
-                    key={user.id}
-                    className="border-t border-gray-800 hover:bg-[#111]/50 transition"
-                  >
-                    <td className="py-3 px-3 sm:px-4 font-semibold text-gray-500">
-                      #{rank} <span className="text-gray-600">({getRankPercent(rank - 1)})</span>
-                    </td>
-
-                    <td className="py-3 px-3 sm:px-4 truncate max-w-[120px] sm:max-w-none">
-                      {user.username || "Unknown"}
-                    </td>
-
-                    <td className="py-3 px-3 sm:px-4 text-blue-400 truncate max-w-[120px] sm:max-w-none">
-                      {user.instagram ? (
-                        <a
-                          href={`https://instagram.com/${user.instagram.replace("@", "")}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="hover:underline inline-flex items-center gap-1"
-                        >
-                          <Instagram className="w-4 h-4 flex-shrink-0" />
-                          <span>{user.instagram}</span>
-                        </a>
-                      ) : (
-                        <span className="text-gray-400">N/A</span>
-                      )}
-                    </td>
-
-                    <td className="py-3 px-3 sm:px-4 text-right font-semibold text-orange-400 whitespace-nowrap">
-                      <Flame className="w-4 h-4 inline text-orange-500" />{" "}
-                      {user.strikes ?? 0}
-                    </td>
-
-                    <td className="py-3 px-3 sm:px-4 text-right font-semibold text-yellow-400 whitespace-nowrap">
-                      <Star className="w-4 h-4 inline text-yellow-400" />{" "}
-                      {user.impactPoints ?? 0}
-                    </td>
-                  </tr>
-                );
-              })}
             </tbody>
           </table>
         </div>
 
-        {users.length === 0 && (
-          <p className="text-gray-500 mt-6">
-            No donors yet. Be the first to make an impact!
-          </p>
+        {/* 🧡 User Rank Display */}
+        {currentUser ? (
+          currentUserRank > 11 ? (
+            <div className="mt-10">
+              <div className="bg-gradient-to-r from-[#111] via-[#181818] to-[#111] border border-white/10 rounded-2xl p-6 shadow-xl">
+                <p className="text-lg sm:text-xl font-semibold text-gray-300 mb-2">
+                  You’re among the top{" "}
+                  <span className="text-yellow-400 animate-pulse">
+                    {animatedPercent}%
+                  </span>{" "}
+                  of all STRIDERS 🚀
+                </p>
+                <p className="text-gray-400 text-sm sm:text-base">
+                  Keep showing up every Monday. Every STRIDE counts 🌿
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-6 text-gray-400 text-sm">
+              You’re in the top 11! 🌟 Keep leading by example.
+            </p>
+          )
+        ) : (
+          <div className="mt-10 text-gray-400">
+            Log in to see your personalized rank 🌿
+          </div>
         )}
 
-        {/* ℹ️ Footer Note */}
         <div className="mt-8 text-gray-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
           <p>
-            <strong className="text-white">Every Monday matters.</strong> Keep showing up — 
-            consistency earns you your spot and strengthens your impact.
+            <strong className="text-white">Impact Points (IP)</strong> — every 4
+            consistent Mondays earns you{" "}
+            <span className="text-yellow-400 font-semibold">+1 IP</span>. It’s a
+            quiet mark of purpose and consistency.
           </p>
         </div>
       </div>
