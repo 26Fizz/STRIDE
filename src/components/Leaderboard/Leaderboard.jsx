@@ -1,3 +1,4 @@
+// src/components/Leaderboard/Leaderboard.jsx
 import React, { useEffect, useState } from "react";
 import { db } from "../../Firebase/firebase";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
@@ -20,16 +21,15 @@ const Leaderboard = () => {
           return { id: docSnap.id, ...data, strikes, impactPoints };
         });
 
-        // Sort by impact points first, then streaks
+        // Sort by IP first, then streaks
         const sorted = userData.sort(
-          (a, b) =>
-            b.impactPoints - a.impactPoints || b.strikes - a.strikes
+          (a, b) => b.impactPoints - a.impactPoints || b.strikes - a.strikes
         );
 
         setUsers(sorted);
         setLoading(false);
 
-        // ✅ Update Firestore if IP missing or outdated
+        // ✅ Sync IP back to Firestore if outdated
         sorted.forEach(async (user) => {
           const userRef = doc(db, "users", user.id);
           const newIP = Math.floor((user.strikes || 0) / 4);
@@ -54,6 +54,17 @@ const Leaderboard = () => {
     );
   }
 
+  const totalUsers = users.length;
+  const top11 = users.slice(0, 11);
+  const remaining = users.slice(11);
+
+  // Helper: get user’s percentile rank (lower rank = higher percentile)
+  const getRankPercent = (index) => {
+    if (totalUsers === 0) return "0%";
+    const percentile = ((index + 1) / totalUsers) * 100;
+    return `Top ${percentile.toFixed(0)}%`;
+  };
+
   return (
     <section className="py-12 px-4 sm:px-6 bg-black text-white">
       <div className="max-w-5xl mx-auto text-center">
@@ -62,7 +73,7 @@ const Leaderboard = () => {
           The STRIDE Impact Leaderboard
         </h2>
 
-        {/* 🔥 Table Wrapper for Mobile Scrolling */}
+        {/* 🔥 Table Wrapper */}
         <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-800">
           <table className="min-w-full text-left border-collapse">
             <thead className="bg-[#111] text-gray-300 text-sm sm:text-base">
@@ -80,7 +91,8 @@ const Leaderboard = () => {
             </thead>
 
             <tbody className="text-sm sm:text-base">
-              {users.map((user, index) => (
+              {/* Top 11 Users */}
+              {top11.map((user, index) => (
                 <tr
                   key={user.id}
                   className={`border-t border-gray-800 hover:bg-[#181818] transition ${
@@ -97,22 +109,20 @@ const Leaderboard = () => {
                     #{index + 1}
                   </td>
 
-                  <td className="py-3 px-3 sm:px-4 font-medium">
-                    <div className="max-w-[120px] sm:max-w-none truncate">
-                      {user.username || "Unknown"}
-                    </div>
+                  <td className="py-3 px-3 sm:px-4 font-medium truncate max-w-[120px] sm:max-w-none">
+                    {user.username || "Unknown"}
                   </td>
 
-                  <td className="py-3 px-3 sm:px-4 text-blue-400">
+                  <td className="py-3 px-3 sm:px-4 text-blue-400 truncate max-w-[120px] sm:max-w-none">
                     {user.instagram ? (
                       <a
                         href={`https://instagram.com/${user.instagram.replace("@", "")}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="hover:underline inline-flex items-center gap-1 truncate max-w-[120px] sm:max-w-none"
+                        className="hover:underline inline-flex items-center gap-1"
                       >
                         <Instagram className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{user.instagram}</span>
+                        <span>{user.instagram}</span>
                       </a>
                     ) : (
                       <span className="text-gray-400">N/A</span>
@@ -120,20 +130,32 @@ const Leaderboard = () => {
                   </td>
 
                   <td className="py-3 px-3 sm:px-4 text-right font-semibold text-orange-400 whitespace-nowrap">
-                    <span className="inline-flex items-center justify-end gap-1">
-                      <Flame className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                      {user.strikes ?? 0}
-                    </span>
+                    <Flame className="w-4 h-4 inline text-orange-500" />{" "}
+                    {user.strikes ?? 0}
                   </td>
 
                   <td className="py-3 px-3 sm:px-4 text-right font-semibold text-yellow-400 whitespace-nowrap">
-                    <span className="inline-flex items-center justify-end gap-1">
-                      <Star className="w-4 h-4 text-yellow-400 flex-shrink-0" />
-                      {user.impactPoints ?? 0}
-                    </span>
+                    <Star className="w-4 h-4 inline text-yellow-400" />{" "}
+                    {user.impactPoints ?? 0}
                   </td>
                 </tr>
               ))}
+
+              {/* Remaining Users — condensed into rank percentage */}
+              {remaining.length > 0 && (
+                <tr className="border-t border-gray-800 bg-[#111]/60">
+                  <td
+                    colSpan="5"
+                    className="py-5 px-4 text-center text-gray-400 text-sm sm:text-base italic"
+                  >
+                    👥 {remaining.length} others are doing great — around{" "}
+                    <span className="text-white font-semibold">
+                      {getRankPercent(11)}
+                    </span>{" "}
+                    and beyond. Keep climbing!
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -147,12 +169,10 @@ const Leaderboard = () => {
         {/* ℹ️ Impact Points Note */}
         <div className="mt-8 text-gray-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
           <p>
-            <strong className="text-white">Impact Points (IP)</strong>{" "}
-            Every 4 Mondays of consistency earns you{" "}
-            <span className="text-orange-400 font-semibold"></span>{" "}
-            {" "}
-            <span className="text-yellow-400 font-semibold">+1 Impact Point</span>.{" "}
-            a mark of consistency, purpose, and quite rebellion.
+            <strong className="text-white">Impact Points (IP)</strong> — Every 4
+            Mondays of consistency earns you{" "}
+            <span className="text-yellow-400 font-semibold">+1 IP</span>, a mark
+            of purpose, consistency, and quiet rebellion.
           </p>
         </div>
       </div>
