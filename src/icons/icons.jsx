@@ -15,6 +15,9 @@ import {
   LogIn,
 } from "lucide-react";
 
+export { CheckCircle2Icon } from "lucide-react";
+
+
 // 💰 Currency icons
 export const IndianRupeeIcon = (props) => <IndianRupee {...props} />;
 
