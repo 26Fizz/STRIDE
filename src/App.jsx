@@ -1,4 +1,3 @@
-// src/App.jsx
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
@@ -24,8 +23,9 @@ import TermsConditions from "./Legal/TermsConditions";
 import RefundPolicy from "./Legal/RefundPolicy";
 import Contact from "./Legal/Contact";
 
-// ✅ Import the new Impact Page
+// ✅ Import other Pages
 import ImpactPage from "./Pages/ImpactPage";
+import PaymentPage from "./Pages/PaymentPage"; // ✅ NEW
 
 const AppContent = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const AppContent = () => {
   const { isMonday: actualIsMonday } = useMemo(() => getDayInfo(), []);
   const isDonationTime = isSimulatingMonday || actualIsMonday;
 
-  const authUser = useAuth(); // Firebase Auth user
+  const authUser = useAuth();
 
   // 🔹 Sync activePage with URL path
   useEffect(() => {
@@ -56,6 +56,7 @@ const AppContent = () => {
     else if (path === "/impact") setActivePage("Impact");
     else if (path === "/donate") setActivePage("Donate");
     else if (path === "/summaries") setActivePage("My Summaries");
+    else if (path === "/payment") setActivePage("Payment");
     else setActivePage("");
   }, [location.pathname]);
 
@@ -65,7 +66,6 @@ const AppContent = () => {
       let path = "/";
 
       switch (page) {
-        // Main pages
         case "Home":
           path = "/";
           break;
@@ -81,8 +81,11 @@ const AppContent = () => {
         case "My Summaries":
           path = "/summaries";
           break;
+        case "Payment":
+          path = "/payment";
+          break;
 
-        // ✅ Legal pages (footer)
+        // ✅ Legal pages
         case "PrivacyPolicy":
         case "/privacy-policy":
           path = "/privacy-policy";
@@ -99,7 +102,6 @@ const AppContent = () => {
         case "/contact":
           path = "/contact";
           break;
-
         default:
           path = "/";
       }
@@ -185,6 +187,9 @@ const AppContent = () => {
           />
           <Route path="/summaries" element={<MySummariesPage unlockedSummaries={unlockedSummaries} />} />
           <Route path="/impact" element={<ImpactPage />} />
+
+          {/* ✅ New Payment Page */}
+          <Route path="/payment" element={<PaymentPage />} />
 
           {/* ✅ Legal Pages */}
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
