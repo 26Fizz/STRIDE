@@ -87,20 +87,6 @@ const DonationPanel = ({
     "STRIDE is a rebellion against apathy — gentle, but firm.",
     "Goodness needs a system. Not a mood.",
     "If you feel lost, STRIDE gives you a small place to begin.",
-  ];
-
-  // ⏳ Cycle through quotes every 5 seconds (only when not Monday)
-  useEffect(() => {
-    if (!isDonationActive) {
-      const interval = setInterval(() => {
-        setQuoteIndex((prev) => (prev + 1) % IMPACT_QUOTES.length);
-      }, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [isDonationActive]);
-
-  // 🌿 STRIDE Quotes
-  const IMPACT_QUOTES = [
     "Some days build your resume. Mondays build your character.",
     "STRIDE is how you stay human in a world that keeps numbing you.",
     "Every STRIDE is a vote for the person you want to become.",
@@ -115,6 +101,17 @@ const DonationPanel = ({
     "Peace comes from knowing you showed up.",
   ];
 
+  // ⏳ Cycle through quotes every 5 seconds (only when not Monday)
+  useEffect(() => {
+    if (!isDonationActive) {
+      const interval = setInterval(() => {
+        setQuoteIndex((prev) => (prev + 1) % IMPACT_QUOTES.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isDonationActive]);
+
+ 
   // 🔁 Rotate quotes every 5s when not Monday
   useEffect(() => {
     if (!isDonationActive) {
