@@ -1,5 +1,6 @@
 // src/components/Donation/DonationPanel.jsx
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+
 import { BOOK_MAP } from "../../data/books";
 import { getDayInfo } from "../../utils/date";
 import DayToggle from "./DayToggle";
