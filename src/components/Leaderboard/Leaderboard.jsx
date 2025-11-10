@@ -17,11 +17,11 @@ const Leaderboard = () => {
         const userData = snapshot.docs.map((docSnap) => {
           const data = docSnap.data();
           const strikes = data.strikes || 0;
-          const impactPoints = Math.floor(strikes / 4); // 1 IP = 4-week streak
+          const impactPoints = Math.floor(strikes / 4);
           return { id: docSnap.id, ...data, strikes, impactPoints };
         });
 
-        // Sort by IP first, then streaks
+        // Sort by impact points first, then streaks
         const sorted = userData.sort(
           (a, b) => b.impactPoints - a.impactPoints || b.strikes - a.strikes
         );
@@ -58,9 +58,9 @@ const Leaderboard = () => {
   const top11 = users.slice(0, 11);
   const remaining = users.slice(11);
 
-  // Helper: get user’s percentile rank (lower rank = higher percentile)
+  // Helper: get percentile rank
   const getRankPercent = (index) => {
-    if (totalUsers === 0) return "0%";
+    if (totalUsers === 0) return "Top 100%";
     const percentile = ((index + 1) / totalUsers) * 100;
     return `Top ${percentile.toFixed(0)}%`;
   };
@@ -73,7 +73,7 @@ const Leaderboard = () => {
           The STRIDE Impact Leaderboard
         </h2>
 
-        {/* 🔥 Table Wrapper */}
+        {/* 🔥 Leaderboard Table */}
         <div className="overflow-x-auto rounded-2xl shadow-lg border border-gray-800">
           <table className="min-w-full text-left border-collapse">
             <thead className="bg-[#111] text-gray-300 text-sm sm:text-base">
@@ -91,7 +91,7 @@ const Leaderboard = () => {
             </thead>
 
             <tbody className="text-sm sm:text-base">
-              {/* Top 11 Users */}
+              {/* 🏆 Top 11 Users */}
               {top11.map((user, index) => (
                 <tr
                   key={user.id}
@@ -141,21 +141,50 @@ const Leaderboard = () => {
                 </tr>
               ))}
 
-              {/* Remaining Users — condensed into rank percentage */}
-              {remaining.length > 0 && (
-                <tr className="border-t border-gray-800 bg-[#111]/60">
-                  <td
-                    colSpan="5"
-                    className="py-5 px-4 text-center text-gray-400 text-sm sm:text-base italic"
+              {/* 👤 Everyone Else */}
+              {remaining.map((user, index) => {
+                const rank = index + 12; // since first 11 are shown
+                return (
+                  <tr
+                    key={user.id}
+                    className="border-t border-gray-800 hover:bg-[#111]/50 transition"
                   >
-                    👥 {remaining.length} others are doing great — around{" "}
-                    <span className="text-white font-semibold">
-                      {getRankPercent(11)}
-                    </span>{" "}
-                    and beyond. Keep climbing!
-                  </td>
-                </tr>
-              )}
+                    <td className="py-3 px-3 sm:px-4 font-semibold text-gray-500">
+                      #{rank} <span className="text-gray-600">({getRankPercent(rank - 1)})</span>
+                    </td>
+
+                    <td className="py-3 px-3 sm:px-4 truncate max-w-[120px] sm:max-w-none">
+                      {user.username || "Unknown"}
+                    </td>
+
+                    <td className="py-3 px-3 sm:px-4 text-blue-400 truncate max-w-[120px] sm:max-w-none">
+                      {user.instagram ? (
+                        <a
+                          href={`https://instagram.com/${user.instagram.replace("@", "")}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:underline inline-flex items-center gap-1"
+                        >
+                          <Instagram className="w-4 h-4 flex-shrink-0" />
+                          <span>{user.instagram}</span>
+                        </a>
+                      ) : (
+                        <span className="text-gray-400">N/A</span>
+                      )}
+                    </td>
+
+                    <td className="py-3 px-3 sm:px-4 text-right font-semibold text-orange-400 whitespace-nowrap">
+                      <Flame className="w-4 h-4 inline text-orange-500" />{" "}
+                      {user.strikes ?? 0}
+                    </td>
+
+                    <td className="py-3 px-3 sm:px-4 text-right font-semibold text-yellow-400 whitespace-nowrap">
+                      <Star className="w-4 h-4 inline text-yellow-400" />{" "}
+                      {user.impactPoints ?? 0}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -166,13 +195,11 @@ const Leaderboard = () => {
           </p>
         )}
 
-        {/* ℹ️ Impact Points Note */}
+        {/* ℹ️ Footer Note */}
         <div className="mt-8 text-gray-400 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
           <p>
-            <strong className="text-white">Impact Points (IP)</strong> — Every 4
-            Mondays of consistency earns you{" "}
-            <span className="text-yellow-400 font-semibold">+1 IP</span>, a mark
-            of purpose, consistency, and quiet rebellion.
+            <strong className="text-white">Every Monday matters.</strong> Keep showing up — 
+            consistency earns you your spot and strengthens your impact.
           </p>
         </div>
       </div>
