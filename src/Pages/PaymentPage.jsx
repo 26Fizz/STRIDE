@@ -17,12 +17,11 @@ const PaymentPage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
+  // Detect mobile & fetch user info
   useEffect(() => {
-    // ✅ Detect mobile devices
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     setIsMobile(/android|iphone|ipad|ipod/i.test(userAgent));
 
-    // ✅ Fetch user info
     const fetchUserInfo = async () => {
       if (!currentUser?.uid) {
         setLoadingUser(false);
@@ -40,18 +39,18 @@ const PaymentPage = () => {
     fetchUserInfo();
   }, [currentUser]);
 
-  // ✅ UPI deep link (works perfectly on mobile)
+  // UPI Deep Link
   const handleUPIRedirect = () => {
     const upiLink = `upi://pay?pa=strideventures@ybl&pn=Stride%20India&am=${amount}&cu=INR`;
 
     if (isMobile) {
-      window.location.href = upiLink; // opens UPI app directly
+      window.location.href = upiLink;
     } else {
-      setShowQR(true); // desktop → show QR
+      setShowQR(true);
     }
   };
 
-  // ✅ Allow users to save the QR from public folder
+  // Save QR
   const handleSaveQR = () => {
     const link = document.createElement("a");
     link.href = "/qr.jpg";
@@ -65,12 +64,20 @@ const PaymentPage = () => {
         <CheckCircle2 className="mx-auto text-green-400 w-16 h-16 mb-4" />
 
         <h1 className="text-3xl font-bold mb-3">Confirm Your Donation</h1>
-        <p className="text-gray-400 mb-8">
-          You're contibuting to real change.
-          Every rupee is tracked. 
+        <p className="text-gray-400 mb-6">
+          You're contributing to real change. Every rupee is tracked.
         </p>
 
-        {/* ✅ Donor Info */}
+        {/* ⚠️ TRUST MESSAGE — YOUR EXACT TEXT */}
+        <p className="text-sm text-yellow-400 bg-yellow-400/10 border border-yellow-500/30 p-3 rounded-lg mb-8 leading-relaxed">
+          <b>Before you proceed:</b><br />
+          Payments are temporarily routed through a Verified Temporary Settlement
+          Account (<b>Hafiz Patel</b>) until STRIDE’s official settlement system goes live.
+          <br />
+          This does not affect the safety or processing of your payment.
+        </p>
+
+        {/* Donor Info */}
         {loadingUser ? (
           <p className="text-gray-400 mb-8">Loading your details...</p>
         ) : currentUser && userInfo ? (
@@ -96,7 +103,7 @@ const PaymentPage = () => {
           </p>
         )}
 
-        {/* ✅ Pay Button */}
+        {/* Pay Button */}
         <button
           onClick={handleUPIRedirect}
           disabled={!currentUser}
@@ -109,14 +116,14 @@ const PaymentPage = () => {
           Proceed to Pay
         </button>
 
-        {/* 💻 Desktop note */}
+        {/* Desktop Notice */}
         {!isMobile && (
           <p className="text-gray-400 text-sm mt-3">
-            Payments from PC should be done using the QR below.
+            Payments from PC must be completed using the QR below.
           </p>
         )}
 
-        {/* 🧾 QR Section */}
+        {/* QR Section */}
         {!isMobile && (
           <div className="mt-8 border-t border-white/10 pt-6">
             <button
@@ -144,10 +151,9 @@ const PaymentPage = () => {
                 </button>
 
                 <p className="text-sm text-gray-400 mt-6 leading-relaxed">
-                  💚 If the pay button doesn’t open your app, you can safely donate
-                  by scanning or saving this QR. UPI ID:{" "}
-                  <span className="text-green-400">strideventures@ybl</span> ·
-                  Trusted by readers every Monday 🌱
+                  If the pay button doesn’t open your UPI app, scan or download
+                  this QR. UPI ID:{" "}
+                  <span className="text-green-400">strideventures@ybl</span>
                 </p>
               </div>
             )}

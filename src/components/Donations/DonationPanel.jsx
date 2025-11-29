@@ -1,6 +1,9 @@
 // src/components/Donation/DonationPanel.jsx
 import React, { useState, useMemo, useEffect } from "react";
+<<<<<<< HEAD
 
+=======
+>>>>>>> e7809f4 (Updated icons, manifest, and payment page trust message)
 import { BOOK_MAP } from "../../data/books";
 import { getDayInfo } from "../../utils/date";
 import DayToggle from "./DayToggle";
@@ -11,6 +14,7 @@ import { IndianRupeeIcon } from "../../icons/icons";
 import { useAuth } from "../../hooks/useAuth";
 import { unlockSummary } from "../../Firebase/firestoreHelpers";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const DonationPanel = ({
   isSimulatingMonday,
@@ -22,6 +26,9 @@ const DonationPanel = ({
   const [amount, setAmount] = useState(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState(null);
+
+  // ✅ FIX #1 — Missing quote index state
+  const [quoteIndex, setQuoteIndex] = useState(0);
 
   const authUser = useAuth();
   const navigate = useNavigate();
@@ -113,8 +120,7 @@ const DonationPanel = ({
     }
   }, [isDonationActive]);
 
- 
-  // 🔁 Rotate quotes every 5s when not Monday
+  // 🔁 Duplicate effect kept EXACTLY as you had it
   useEffect(() => {
     if (!isDonationActive) {
       const interval = setInterval(() => {
@@ -140,7 +146,7 @@ const DonationPanel = ({
       return;
     }
 
-    // ✅ Redirect to /payment page
+    // Redirect to /payment
     navigate("/payment", {
       state: {
         bookId: selectedBookId,
@@ -200,56 +206,54 @@ const DonationPanel = ({
             <PledgeAmountInput amount={amount} setAmount={setAmount} />
           </div>
 
-          {/* 🔘 Donate Button */}
+          {/* Donate Button */}
           <div className="mt-8 flex justify-center">
-  <button
-    onClick={() => {
-      if (!isProcessing && amount < 10) {
-        alert("⚠️ Minimum donation amount is ₹10. Please increase your pledge.");
-        return;
-      }
-      handleDonateClick();
-    }}
-    disabled={isDisabled || isProcessing}
-    className={`relative w-full max-w-md flex items-center justify-center gap-2 py-4 text-lg font-semibold rounded-xl transition-all duration-300 overflow-hidden
-      ${
-        isDisabled
-          ? "bg-gray-800 text-gray-500 cursor-not-allowed"
-          : "bg-red-600 text-white hover:scale-[1.03] shadow-lg hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]"
-      }`}
-  >
-    {isProcessing ? (
-      <>
-        <LoaderIcon className="animate-spin h-5 w-5 text-white" />
-        Processing Donation...
-      </>
-    ) : (
-      <>
-        <IndianRupeeIcon className="h-5 w-5" />
-        {`Take Your STRIDE`}
-      </>
-    )}
+            <button
+              onClick={() => {
+                if (!isProcessing && amount < 10) {
+                  alert("⚠️ Minimum donation amount is ₹10. Please increase your pledge.");
+                  return;
+                }
+                handleDonateClick();
+              }}
+              disabled={isDisabled || isProcessing}
+              className={`relative w-full max-w-md flex items-center justify-center gap-2 py-4 text-lg font-semibold rounded-xl transition-all duration-300 overflow-hidden
+                ${
+                  isDisabled
+                    ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+                    : "bg-red-600 text-white hover:scale-[1.03] shadow-lg hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]"
+                }`}
+            >
+              {isProcessing ? (
+                <>
+                  <LoaderIcon className="animate-spin h-5 w-5 text-white" />
+                  Processing Donation...
+                </>
+              ) : (
+                <>
+                  <IndianRupeeIcon className="h-5 w-5" />
+                  {`Take Your STRIDE`}
+                </>
+              )}
 
-    {/* ✨ Soft glare shimmer effect */}
-    {!isDisabled && (
-      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-glare pointer-events-none" />
-    )}
-  </button>
+              {!isDisabled && (
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-glare pointer-events-none" />
+              )}
+            </button>
 
-  {/* Glare Animation */}
-  <style>
-    {`
-      @keyframes glareMove {
-        0% { transform: translateX(-100%); }
-        50% { transform: translateX(100%); }
-        100% { transform: translateX(100%); }
-      }
-      .animate-glare {
-        animation: glareMove 4s ease-in-out infinite;
-      }
-    `}
-  </style>
-</div>
+            <style>
+              {`
+                @keyframes glareMove {
+                  0% { transform: translateX(-100%); }
+                  50% { transform: translateX(100%); }
+                  100% { transform: translateX(100%); }
+                }
+                .animate-glare {
+                  animation: glareMove 4s ease-in-out infinite;
+                }
+              `}
+            </style>
+          </div>
 
           {message && (
             <div
