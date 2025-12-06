@@ -35,3 +35,12 @@ h1, h2, h3, h4 {
   background-size: 200% auto;
   animation: textShine 5s linear infinite alternate;
 }
+
+@keyframes slideIn {
+  from { transform: translateX(40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}

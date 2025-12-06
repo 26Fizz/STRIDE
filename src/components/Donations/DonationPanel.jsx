@@ -1,9 +1,5 @@
 // src/components/Donation/DonationPanel.jsx
 import React, { useState, useMemo, useEffect } from "react";
-<<<<<<< HEAD
-
-=======
->>>>>>> e7809f4 (Updated icons, manifest, and payment page trust message)
 import { BOOK_MAP } from "../../data/books";
 import { getDayInfo } from "../../utils/date";
 import DayToggle from "./DayToggle";
@@ -13,8 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { IndianRupeeIcon } from "../../icons/icons";
 import { useAuth } from "../../hooks/useAuth";
 import { unlockSummary } from "../../Firebase/firestoreHelpers";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const DonationPanel = ({
   isSimulatingMonday,
@@ -26,14 +21,12 @@ const DonationPanel = ({
   const [amount, setAmount] = useState(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [message, setMessage] = useState(null);
-
-  // ✅ FIX #1 — Missing quote index state
   const [quoteIndex, setQuoteIndex] = useState(0);
 
   const authUser = useAuth();
   const navigate = useNavigate();
 
-  // 🗓️ Get current day
+  // Day info
   const { dayName, dateString } = useMemo(() => getDayInfo(), []);
   const today = new Date().getDay();
   const isMonday = today === 1;
@@ -41,7 +34,7 @@ const DonationPanel = ({
 
   const selectedBook = BOOK_MAP[selectedBookId];
 
-  // 🧠 STRIDE IMPACT QUOTES
+// 🧠 STRIDE IMPACT QUOTES
   const IMPACT_QUOTES = [
     // A — Meaning & Modern Life
     "Some days build your resume. Mondays build your character.",
@@ -110,7 +103,7 @@ const DonationPanel = ({
     "Peace comes from knowing you showed up.",
   ];
 
-  // ⏳ Cycle through quotes every 5 seconds (only when not Monday)
+  // Rotate quotes when it's NOT Monday
   useEffect(() => {
     if (!isDonationActive) {
       const interval = setInterval(() => {
@@ -120,24 +113,15 @@ const DonationPanel = ({
     }
   }, [isDonationActive]);
 
-  // 🔁 Duplicate effect kept EXACTLY as you had it
-  useEffect(() => {
-    if (!isDonationActive) {
-      const interval = setInterval(() => {
-        setQuoteIndex((prev) => (prev + 1) % IMPACT_QUOTES.length);
-      }, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [isDonationActive]);
-
-  // 💸 Handle Donate Button
-  const handleDonateClick = () => {
+  // Handle Take Your STRIDE
+  const handleTakeYourStride = async () => {
     if (!selectedBookId) {
       setMessage({ type: "error", text: "Please select a book before donating." });
       return;
     }
-    if (!amount || amount < 1) {
-      setMessage({ type: "error", text: "Please enter a valid amount (minimum ₹10." });
+
+    if (!amount || amount < 10) {
+      setMessage({ type: "error", text: "Minimum donation amount is ₹10." });
       return;
     }
 
@@ -146,22 +130,35 @@ const DonationPanel = ({
       return;
     }
 
-    // Redirect to /payment
-    navigate("/payment", {
-      state: {
-        bookId: selectedBookId,
-        bookTitle: selectedBook?.title,
-        amount: amount,
-        user: authUser.email || "Anonymous",
-      },
-    });
+    try {
+      setIsProcessing(true);
+
+      // Unlock summary immediately
+      await unlockSummary(authUser.uid, selectedBookId, amount);
+
+      if (onUnlockSummary) onUnlockSummary(selectedBookId);
+
+      navigate("/payment", {
+        state: {
+          bookId: selectedBookId,
+          bookTitle: selectedBook?.title,
+          amount: amount,
+          user: authUser.email || "Anonymous",
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      setMessage({ type: "error", text: "Something went wrong. Try again." });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const isDisabled = !selectedBookId || amount < 1 || isProcessing;
 
   return (
     <section className="relative flex flex-col items-center justify-center text-center min-h-[95vh] px-6 py-20 bg-black text-white overflow-hidden">
-      {/* 🌿 Background Glows */}
+      {/* Background glows */}
       <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-green-400/20 blur-[160px] rounded-full"></div>
       <div className="absolute bottom-[-15%] right-[-10%] w-[450px] h-[450px] bg-emerald-500/20 blur-[180px] rounded-full"></div>
 
@@ -174,21 +171,37 @@ const DonationPanel = ({
         <h2 className="text-4xl sm:text-5xl font-extrabold mb-4">
           {isDonationActive ? "Give. Grow. Repeat." : `Today is ${dayName}`}
         </h2>
-        <p className="text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+
+        <p className="text-gray-300 max-w-2xl mx-auto mb-6 leading-relaxed">
           Every Monday, STRIDE drops a real cause. You donate ₹10 and unlock 3 minutes of wisdom that changes how you think — while changing how someone lives.
         </p>
 
-        <div className="mb-8">
-          <DayToggle
-            isSimulatingMonday={isSimulatingMonday}
-            toggleSimulateMonday={toggleSimulateMonday}
-            dateString={dateString}
-            dayName={dayName}
-          />
-        </div>
+        {/* Rotating quote */}
+        {!isDonationActive && (
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={quoteIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+              className="text-gray-400 italic mb-6 max-w-2xl mx-auto"
+            >
+              "{IMPACT_QUOTES[quoteIndex]}"
+            </motion.p>
+          </AnimatePresence>
+        )}
 
-        {/* Main Card */}
+        <DayToggle
+          isSimulatingMonday={isSimulatingMonday}
+          toggleSimulateMonday={toggleSimulateMonday}
+          dateString={dateString}
+          dayName={dayName}
+        />
+
+        {/* Card */}
         <div className="bg-[#0e0e0e]/70 backdrop-blur-xl border border-gray-800 rounded-3xl shadow-2xl p-8 sm:p-12 space-y-10">
+          {/* Step 1: Select Book */}
           <div>
             <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-100">
               1️⃣ Select Your Read
@@ -199,6 +212,7 @@ const DonationPanel = ({
             />
           </div>
 
+          {/* Step 2: Amount */}
           <div>
             <h3 className="text-lg sm:text-xl font-semibold mb-4 text-gray-100">
               2️⃣ This Monday, Create Real Impact
@@ -206,16 +220,10 @@ const DonationPanel = ({
             <PledgeAmountInput amount={amount} setAmount={setAmount} />
           </div>
 
-          {/* Donate Button */}
+          {/* Take Your STRIDE button */}
           <div className="mt-8 flex justify-center">
             <button
-              onClick={() => {
-                if (!isProcessing && amount < 10) {
-                  alert("⚠️ Minimum donation amount is ₹10. Please increase your pledge.");
-                  return;
-                }
-                handleDonateClick();
-              }}
+              onClick={handleTakeYourStride}
               disabled={isDisabled || isProcessing}
               className={`relative w-full max-w-md flex items-center justify-center gap-2 py-4 text-lg font-semibold rounded-xl transition-all duration-300 overflow-hidden
                 ${
@@ -224,18 +232,12 @@ const DonationPanel = ({
                     : "bg-red-600 text-white hover:scale-[1.03] shadow-lg hover:shadow-[0_0_30px_rgba(239,68,68,0.5)]"
                 }`}
             >
-              {isProcessing ? (
-                <>
-                  <LoaderIcon className="animate-spin h-5 w-5 text-white" />
-                  Processing Donation...
-                </>
-              ) : (
+              {isProcessing ? "Processing..." : (
                 <>
                   <IndianRupeeIcon className="h-5 w-5" />
-                  {`Take Your STRIDE`}
+                  Take Your STRIDE
                 </>
               )}
-
               {!isDisabled && (
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-glare pointer-events-none" />
               )}

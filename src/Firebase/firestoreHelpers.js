@@ -4,11 +4,15 @@ import { db } from "./firebase";
 // 🔹 Unlock a summary (your existing code)
 export const unlockSummary = async (uid, bookId, amount) => {
   const userRef = doc(db, "users", uid);
+
   await setDoc(
     userRef,
     {
       unlockedSummaries: {
-        [bookId]: { unlockedAt: serverTimestamp(), amount },
+        [bookId]: {
+          unlockedAt: serverTimestamp(),
+          amount,
+        },
       },
     },
     { merge: true }

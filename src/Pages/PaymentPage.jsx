@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../Firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
+import { motion, AnimatePresence } from "framer-motion";
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -16,6 +17,11 @@ const PaymentPage = () => {
   const [amount, setAmount] = useState(location.state?.amount || 50);
   const [isMobile, setIsMobile] = useState(false);
   const [showQR, setShowQR] = useState(false);
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
 
   // Detect mobile & fetch user info
   useEffect(() => {
@@ -42,12 +48,8 @@ const PaymentPage = () => {
   // UPI Deep Link
   const handleUPIRedirect = () => {
     const upiLink = `upi://pay?pa=strideventures@ybl&pn=Stride%20India&am=${amount}&cu=INR`;
-
-    if (isMobile) {
-      window.location.href = upiLink;
-    } else {
-      setShowQR(true);
-    }
+    if (isMobile) window.location.href = upiLink;
+    else setShowQR(true);
   };
 
   // Save QR
@@ -59,8 +61,33 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white px-6 py-12">
-      <div className="bg-gradient-to-b from-gray-900 to-black rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-white/10">
+    <div className="min-h-screen bg-black flex items-center justify-center text-white px-6 py-12 relative">
+      {/* Smooth Loading Overlay */}
+      <AnimatePresence>
+        {loadingUser && (
+          <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="w-16 h-16 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mb-4"
+              style={{ borderTopColor: "transparent" }}
+            />
+            <motion.p
+              className="text-gray-300 text-lg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Loading your donation details...
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="bg-gradient-to-b from-gray-900 to-black rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-white/10 relative z-10">
         <CheckCircle2 className="mx-auto text-green-400 w-16 h-16 mb-4" />
 
         <h1 className="text-3xl font-bold mb-3">Confirm Your Donation</h1>
@@ -68,7 +95,6 @@ const PaymentPage = () => {
           You're contributing to real change. Every rupee is tracked.
         </p>
 
-        {/* ⚠️ TRUST MESSAGE — YOUR EXACT TEXT */}
         <p className="text-sm text-yellow-400 bg-yellow-400/10 border border-yellow-500/30 p-3 rounded-lg mb-8 leading-relaxed">
           <b>Before you proceed:</b><br />
           Payments are temporarily routed through a Verified Temporary Settlement
@@ -77,33 +103,25 @@ const PaymentPage = () => {
           This does not affect the safety or processing of your payment.
         </p>
 
-        {/* Donor Info */}
-        {loadingUser ? (
-          <p className="text-gray-400 mb-8">Loading your details...</p>
-        ) : currentUser && userInfo ? (
+        {currentUser && userInfo && !loadingUser ? (
           <div className="space-y-2 mb-8">
             <p>
               <span className="font-semibold text-gray-300">Donor:</span>{" "}
-              <span className="text-green-400">
-                @{userInfo.instagram || userInfo.username}
-              </span>
+              <span className="text-green-400">@{userInfo.instagram || userInfo.username}</span>
             </p>
             <p>
-              <span className="font-semibold text-gray-300">Email:</span>{" "}
-              {userInfo.email}
+              <span className="font-semibold text-gray-300">Email:</span> {userInfo.email}
             </p>
             <p>
-              <span className="font-semibold text-gray-300">Amount:</span> ₹
-              {amount}
+              <span className="font-semibold text-gray-300">Amount:</span> ₹{amount}
             </p>
           </div>
-        ) : (
+        ) : !loadingUser && (
           <p className="text-gray-400 mb-8">
             Please sign in to continue with your donation.
           </p>
         )}
 
-        {/* Pay Button */}
         <button
           onClick={handleUPIRedirect}
           disabled={!currentUser}
@@ -116,14 +134,12 @@ const PaymentPage = () => {
           Proceed to Pay
         </button>
 
-        {/* Desktop Notice */}
         {!isMobile && (
           <p className="text-gray-400 text-sm mt-3">
             Payments from PC must be completed using the QR below.
           </p>
         )}
 
-        {/* QR Section */}
         {!isMobile && (
           <div className="mt-8 border-t border-white/10 pt-6">
             <button
@@ -151,8 +167,7 @@ const PaymentPage = () => {
                 </button>
 
                 <p className="text-sm text-gray-400 mt-6 leading-relaxed">
-                  If the pay button doesn’t open your UPI app, scan or download
-                  this QR. UPI ID:{" "}
+                  If the pay button doesn’t open your UPI app, scan or download this QR. UPI ID:{" "}
                   <span className="text-green-400">strideventures@ybl</span>
                 </p>
               </div>
@@ -160,7 +175,6 @@ const PaymentPage = () => {
           </div>
         )}
 
-        {/* Cancel */}
         <button
           onClick={() => navigate("/")}
           className="mt-8 w-full py-2 text-gray-400 hover:text-white transition"

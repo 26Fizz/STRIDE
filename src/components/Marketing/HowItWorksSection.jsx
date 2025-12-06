@@ -25,9 +25,9 @@ const steps = [
 
 const HowWeWorkSection = () => {
   return (
-    <section className="relative bg-black text-white py-24 px-6 overflow-hidden">
-      {/* 🌫️ Subtle background depth gradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(20,83,45,0.08),_transparent_70%)] pointer-events-none" />
+    <section className="relative bg-black text-white py-28 px-6 overflow-hidden">
+      {/* Subtle background gradient for depth */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(20,83,45,0.06),_transparent_75%)] pointer-events-none" />
 
       {/* Header */}
       <motion.div
@@ -35,10 +35,10 @@ const HowWeWorkSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="text-center max-w-2xl mx-auto mb-16 relative z-10"
+        className="text-center max-w-2xl mx-auto mb-20 relative z-10"
       >
         <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-100 via-emerald-300 to-gray-100">
-          How STRIDE Works.
+          How STRIDE Works
         </h2>
         <p className="mt-4 text-gray-400 text-base sm:text-lg leading-relaxed">
           Simple. Consistent. Transformative. Every Monday, your small action sets big ideas in motion.
@@ -46,7 +46,7 @@ const HowWeWorkSection = () => {
       </motion.div>
 
       {/* Steps */}
-      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-6xl mx-auto">
         {steps.map((step, index) => (
           <motion.div
             key={step.id}
@@ -54,10 +54,10 @@ const HowWeWorkSection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: index * 0.15, ease: "easeOut" }}
             viewport={{ once: true }}
-            className="group bg-[#0e0e0e] hover:bg-[#121212] border border-gray-800 hover:border-emerald-500/30 rounded-2xl p-8 text-center transition-all duration-300"
+            className="group bg-[#0e0e0e] hover:bg-[#121212] border border-gray-800 hover:border-emerald-500/30 rounded-2xl p-8 text-center transition-all duration-300 shadow-sm hover:shadow-lg"
           >
             {/* Icon */}
-            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/10 group-hover:bg-emerald-500/20 mx-auto mb-6 transition-all duration-300">
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/10 group-hover:bg-emerald-500/20 mx-auto mb-6 transition-all duration-300">
               {step.icon}
             </div>
 
@@ -71,7 +71,7 @@ const HowWeWorkSection = () => {
       </div>
 
       {/* Accent underline */}
-      <div className="relative z-10 mt-20 w-24 h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent mx-auto rounded-full opacity-40" />
+      <div className="relative z-10 mt-24 w-24 h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent mx-auto rounded-full opacity-40" />
     </section>
   );
 };
