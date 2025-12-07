@@ -1,147 +1,125 @@
+// src/pages/PaymentPage.jsx
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, Download, QrCode } from "lucide-react";
+import { QrCode, Copy, CheckCircle2, Download } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { db } from "../Firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "../hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 
-const PaymentPage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const auth = useAuth();
+const STRIDE_UPI = "strideventures@ybl";
 
-  const currentUser = auth?.currentUser || auth?.user || auth || null;
-  const [userInfo, setUserInfo] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [amount, setAmount] = useState(location.state?.amount || 50);
+const PaymentPage = () => {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const authUser = useAuth();
+
+  const [amount] = useState(state?.amount || 10);
   const [isMobile, setIsMobile] = useState(false);
   const [showQR, setShowQR] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  // Scroll to top on mount
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "auto" });
+    const ua = navigator.userAgent.toLowerCase();
+    setIsMobile(/android|iphone|ipad|ipod/.test(ua));
   }, []);
 
-  // Detect mobile & fetch user info
   useEffect(() => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    setIsMobile(/android|iphone|ipad|ipod/i.test(userAgent));
+    window.scrollTo(0, 0);
+  }, []);
 
-    const fetchUserInfo = async () => {
-      if (!currentUser?.uid) {
-        setLoadingUser(false);
-        return;
-      }
-      try {
-        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-        if (userDoc.exists()) setUserInfo(userDoc.data());
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-      } finally {
-        setLoadingUser(false);
-      }
-    };
-    fetchUserInfo();
-  }, [currentUser]);
-
-  // UPI Deep Link
   const handleUPIRedirect = () => {
-    const upiLink = `upi://pay?pa=strideventures@ybl&pn=Stride%20India&am=${amount}&cu=INR`;
+    const upiLink = `upi://pay?pa=${STRIDE_UPI}&pn=STRIDE&am=${amount}&cu=INR`;
     if (isMobile) window.location.href = upiLink;
     else setShowQR(true);
   };
 
-  // Save QR
-  const handleSaveQR = () => {
+  const copyUPI = () => {
+    navigator.clipboard.writeText(STRIDE_UPI);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const saveQR = () => {
     const link = document.createElement("a");
     link.href = "/qr.jpg";
-    link.download = "Stride_UPI_QR.jpg";
+    link.download = "STRIDE_UPI_QR.jpg";
     link.click();
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-white px-6 py-12 relative">
-      {/* Smooth Loading Overlay */}
-      <AnimatePresence>
-        {loadingUser && (
-          <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className="w-16 h-16 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mb-4"
-              style={{ borderTopColor: "transparent" }}
-            />
-            <motion.p
-              className="text-gray-300 text-lg"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              Loading your donation details...
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="min-h-screen bg-black text-white flex justify-center items-center px-6 py-10">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-b from-neutral-900 to-black border border-white/10 shadow-xl rounded-3xl p-8 w-full max-w-md text-center"
+      >
 
-      <div className="bg-gradient-to-b from-gray-900 to-black rounded-3xl shadow-2xl p-8 w-full max-w-md text-center border border-white/10 relative z-10">
         <CheckCircle2 className="mx-auto text-green-400 w-16 h-16 mb-4" />
 
-        <h1 className="text-3xl font-bold mb-3">Confirm Your Donation</h1>
-        <p className="text-gray-400 mb-6">
-          You're contributing to real change. Every rupee is tracked.
+        <h1 className="text-3xl font-bold mb-3">Complete Your Donation</h1>
+
+        <p className="text-gray-400 mb-8 leading-relaxed">
+          STRIDE uses{" "}
+          <span className="text-white font-semibold">direct UPI transfers</span> — 
+          a conscious design choice to keep contributions{" "}
+          <span className="text-white font-semibold">simple, fast, and transparent.</span>
         </p>
 
-        <p className="text-sm text-yellow-400 bg-yellow-400/10 border border-yellow-500/30 p-3 rounded-lg mb-8 leading-relaxed">
-          <b>Before you proceed:</b><br />
-          Payments are temporarily routed through a Verified Temporary Settlement
-          Account (<b>Hafiz Patel</b>) until STRIDE’s official settlement system goes live.
-          <br />
-          This does not affect the safety or processing of your payment.
-        </p>
+        {/* WHY WE USE DIRECT UPI */}
+        <div className="bg-white/5 p-4 rounded-xl border border-white/10 mb-8 text-left">
+          <p className="text-gray-300 text-sm leading-relaxed">
 
-        {currentUser && userInfo && !loadingUser ? (
-          <div className="space-y-2 mb-8">
-            <p>
-              <span className="font-semibold text-gray-300">Donor:</span>{" "}
-              <span className="text-green-400">@{userInfo.instagram || userInfo.username}</span>
-            </p>
-            <p>
-              <span className="font-semibold text-gray-300">Email:</span> {userInfo.email}
-            </p>
-            <p>
-              <span className="font-semibold text-gray-300">Amount:</span> ₹{amount}
-            </p>
-          </div>
-        ) : !loadingUser && (
-          <p className="text-gray-400 mb-8">
-            Please sign in to continue with your donation.
+            To stay{" "}
+            <span className="font-semibold text-white">radically transparent</span>, 
+            we use direct UPI ensuring{" "}
+            <span className="font-semibold text-white">100% of your contribution</span>{" "}
+            reaches the work we show you. No cuts. No processing fees.
+
+            <br /><br />
+
+
+            
+
+            A more seamless system is underway,
+            but for now, this remains the most{" "}
+            <span className="font-semibold text-white">
+             reliable 
+            </span>{" "}
+             and intentional form of the ritual
           </p>
-        )}
+        </div>
 
+        {/* DONATION SUMMARY */}
+        <div className="mb-8 bg-white/5 p-4 rounded-xl border border-white/10">
+          <p className="text-gray-300">
+            <span className="font-semibold">Amount:</span>{" "}
+            <span className="text-green-400">₹{amount}</span>
+          </p>
+          <p className="text-gray-300 mt-1">
+            <span className="font-semibold">UPI ID:</span>{" "}
+            <span className="text-blue-400">{STRIDE_UPI}</span>
+          </p>
+        </div>
+
+        {/* PAY BUTTON */}
         <button
           onClick={handleUPIRedirect}
-          disabled={!currentUser}
-          className={`w-full py-3 rounded-xl font-semibold text-black transition ${
-            currentUser
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-gray-600 cursor-not-allowed"
-          }`}
+          className="w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-black font-semibold transition"
         >
-          Proceed to Pay
+          Pay via UPI
         </button>
 
-        {!isMobile && (
-          <p className="text-gray-400 text-sm mt-3">
-            Payments from PC must be completed using the QR below.
-          </p>
-        )}
+        {/* COPY UPI BUTTON */}
+        <button
+          onClick={copyUPI}
+          className="mt-4 w-full py-3 rounded-xl bg-white text-black flex justify-center items-center gap-2 font-semibold hover:bg-gray-200 transition"
+        >
+          {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+          {copied ? "UPI ID Copied" : "Copy UPI ID"}
+        </button>
 
+        {/* QR ON DESKTOP */}
         {!isMobile && (
-          <div className="mt-8 border-t border-white/10 pt-6">
+          <div className="mt-10 border-t border-white/10 pt-6">
             <button
               onClick={() => setShowQR(!showQR)}
               className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-semibold transition"
@@ -150,42 +128,48 @@ const PaymentPage = () => {
               {showQR ? "Hide QR Code" : "Show QR Code"}
             </button>
 
-            {showQR && (
-              <div className="mt-6 animate-fadeIn">
-                <img
-                  src="/qr.jpg"
-                  alt="Stride UPI QR"
-                  className="w-52 h-52 mx-auto rounded-lg border border-gray-700 shadow-lg mb-4"
-                />
-
-                <button
-                  onClick={handleSaveQR}
-                  className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition"
+            <AnimatePresence>
+              {showQR && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="mt-6"
                 >
-                  <Download className="w-5 h-5" />
-                  Save QR Code
-                </button>
+                  <img
+                    src="/qr.jpg"
+                    alt="STRIDE UPI QR"
+                    className="w-52 h-52 mx-auto rounded-lg border border-gray-700 shadow-lg mb-4"
+                  />
 
-                <p className="text-sm text-gray-400 mt-6 leading-relaxed">
-                  If the pay button doesn’t open your UPI app, scan or download this QR. UPI ID:{" "}
-                  <span className="text-green-400">strideventures@ybl</span>
-                </p>
-              </div>
-            )}
+                  <button
+                    onClick={saveQR}
+                    className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white text-black font-semibold hover:bg-gray-200 transition"
+                  >
+                    <Download className="w-5 h-5" />
+                    Save QR Code
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <p className="text-xs text-gray-500 mt-6 leading-relaxed">
+              If UPI apps don’t open automatically, scan the QR or paste the UPI ID in your app.
+            </p>
           </div>
         )}
 
         <button
           onClick={() => navigate("/")}
-          className="mt-8 w-full py-2 text-gray-400 hover:text-white transition"
+          className="mt-10 w-full py-2 text-gray-500 hover:text-white transition"
         >
           Cancel
         </button>
 
-        <p className="text-xs text-gray-500 mt-6">
-          Secure payment powered by UPI · STRIDE Ventures
+        <p className="text-xs text-gray-500 mt-4">
+          STRIDE • A New India Begins With You
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };
