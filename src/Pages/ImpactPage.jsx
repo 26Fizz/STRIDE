@@ -22,12 +22,14 @@ const ImpactPage = () => {
         </h1>
         <p className="text-gray-300 text-base sm:text-lg leading-relaxed px-2">
           Every Monday, every rupee, and every act of generosity creates ripples
-          of change. Welcome to STRIDE’s living impact log — 100% transparent.
+          of change. Welcome to STRIDE’s living impact log — 100% transparent.<br/>
+          Note: This is sample data. Real impact numbers will appear once Week 1 is completed
         </p>
 
         <div className="mt-6 inline-flex items-center gap-2 bg-red-600/10 text-red-400 px-4 py-2 rounded-full text-xs sm:text-sm border border-red-600/30">
           <Heart className="w-4 h-4 text-red-400 animate-pulse" />
           100% Transparent. Every Rupee Tracked in STRIDE Impact Log.
+          
         </div>
       </motion.div>
 
@@ -120,7 +122,7 @@ const ImpactPage = () => {
         className="mt-20 sm:mt-24 max-w-3xl mx-auto text-center bg-gray-900/60 border border-white/10 rounded-2xl p-6 sm:p-8 shadow-lg"
       >
         <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
-          🌍 A Note from STRIDE
+           A Note from STRIDE
         </h3>
         <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
           STRIDE is currently in its early phase, operating exclusively in{" "}
