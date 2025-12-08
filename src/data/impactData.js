@@ -4,11 +4,11 @@
 
 export const IMPACT_WEEKS = [
   {
-    week: "Week 1",
+    week: "Month 1",
     title: "Planting Seeds of Change",
     shortTitle: "Seed of Change 🌱", // For mobile cards if needed
     description:
-      "In our first week, 37 donors contributed to STRIDE’s mission. Together, we raised ₹2,950 — supporting literacy programs and providing curated Monday Reads summaries to our community.",
+      "( Note: This is sample data. Real impact numbers will appear once Month is completed)In our first month, 126 donors contributed to STRIDE’s mission. Together, we raised ₹2,950 — supporting literacy programs and providing curated Monday Reads summaries to our community.",
     raised: 2950,
     donors: 37,
     summaries: 5,
@@ -20,11 +20,11 @@ export const IMPACT_WEEKS = [
     highlight: "First milestone reached with 37 changemakers 🌍",
   },
   {
-    week: "Week 2",
+    week: "Month 2",
     title: "Momentum in Motion",
     shortTitle: "Momentum 🚀",
     description:
-      "More readers joined STRIDE this week! ₹6,420 was raised from 82 donors, expanding our impact network and allowing us to feature more life-changing books every Monday.",
+      "More readers joined STRIDE this month! ₹6,420 was raised from 82 donors, expanding our impact network and allowing us to feature more life-changing books every Monday.",
     raised: 6420,
     donors: 82,
     summaries: 5,

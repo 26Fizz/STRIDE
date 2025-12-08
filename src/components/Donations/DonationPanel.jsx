@@ -2,7 +2,8 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { BOOK_MAP } from "../../data/books";
 import { getDayInfo } from "../../utils/date";
-import DayToggle from "./DayToggle";
+// ❌ Removed DayToggle import
+// import DayToggle from "./DayToggle";
 import BookSelectionGrid from "./BookSelectionGrid";
 import PledgeAmountInput from "./PledgeAmountInput";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +35,7 @@ const DonationPanel = ({
 
   const selectedBook = BOOK_MAP[selectedBookId];
 
-// 🧠 STRIDE IMPACT QUOTES
+  // 🧠 STRIDE IMPACT QUOTES
   const IMPACT_QUOTES = [
     // A — Meaning & Modern Life
     "Some days build your resume. Mondays build your character.",
@@ -192,12 +193,14 @@ const DonationPanel = ({
           </AnimatePresence>
         )}
 
+        {/* ❌ Removed ONLY this:
         <DayToggle
           isSimulatingMonday={isSimulatingMonday}
           toggleSimulateMonday={toggleSimulateMonday}
           dateString={dateString}
           dayName={dayName}
         />
+        */}
 
         {/* Card */}
         <div className="bg-[#0e0e0e]/70 backdrop-blur-xl border border-gray-800 rounded-3xl shadow-2xl p-8 sm:p-12 space-y-10">
