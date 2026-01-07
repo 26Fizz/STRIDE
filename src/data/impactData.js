@@ -9,9 +9,9 @@ export const IMPACT_WEEKS = [
     shortTitle: "Seed of Change 🌱", // For mobile cards if needed
     description:
       "( Note: This is sample data. Real impact numbers will appear once Month is completed)In our first month, 126 donors contributed to STRIDE’s mission. Together, we raised ₹2,950 — supporting literacy programs and providing curated Monday Reads summaries to our community.",
-    raised: 2950,
+    raised: 2000,
     donors: 37,
-    summaries: 5,
+    summaries: 7,
     image:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=60",
     thumbnail:
@@ -19,20 +19,5 @@ export const IMPACT_WEEKS = [
     video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     highlight: "First milestone reached with 37 changemakers 🌍",
   },
-  {
-    week: "Month 2",
-    title: "Momentum in Motion",
-    shortTitle: "Momentum 🚀",
-    description:
-      "More readers joined STRIDE this month! ₹6,420 was raised from 82 donors, expanding our impact network and allowing us to feature more life-changing books every Monday.",
-    raised: 6420,
-    donors: 82,
-    summaries: 5,
-    image:
-      "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1200&q=60",
-    thumbnail:
-      "https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=600&q=60",
-    video: "https://www.youtube.com/embed/J---aiyznGQ",
-    highlight: "82 donors united to amplify the Monday Reads journey 📚",
-  },
+
 ];
