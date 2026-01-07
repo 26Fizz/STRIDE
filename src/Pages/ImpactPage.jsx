@@ -36,9 +36,9 @@ const ImpactPage = () => {
       {/* 📊 Global Stats */}
       <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 max-w-4xl mx-auto">
         {[
-          { icon: <IndianRupee className="w-6 h-6" />, label: "Total Raised", value: "₹9,370" },
-          { icon: <Users className="w-6 h-6" />, label: "Total Donors", value: "119" },
-          { icon: <BookOpen className="w-6 h-6" />, label: "Summaries Shared", value: "10" },
+          { icon: <IndianRupee className="w-6 h-6" />, label: "Total Raised", value: "₹2,000" },
+          { icon: <Users className="w-6 h-6" />, label: "Total Donors", value: "60" },
+          { icon: <BookOpen className="w-6 h-6" />, label: "Summaries Shared", value: "7" },
         ].map((stat, i) => (
           <motion.div
             key={i}
