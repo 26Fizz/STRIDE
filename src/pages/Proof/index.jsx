@@ -14,7 +14,7 @@ export default function ProofPage(){
 
   return(
     <>
-      <section style={{paddingTop:120,paddingBottom:72,padding:"120px 40px 72px",background:"linear-gradient(160deg,#080a07,#0f1a0e)"}}>
+      <section style={{paddingTop:120,paddingBottom:72,padding:"120px 24px 72px",background:"linear-gradient(160deg,#080a07,#0f1a0e)"}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
           <SectionLabel light>Public ledger</SectionLabel>
           <h1 style={{fontFamily:F.display,fontSize:"clamp(40px,5.5vw,64px)",fontWeight:600,lineHeight:1.06,letterSpacing:"-0.025em",marginBottom:20}}>
@@ -32,9 +32,12 @@ export default function ProofPage(){
           </div>
         </div>
       </section>
+
       <MarqueeStrip/>
-      <section style={{padding:"56px 40px",background:C.ink}}>
+
+      <section style={{padding:"56px 24px",background:C.ink}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
+          {/* Filter pills */}
           <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:36}}>
             {cats.map(c=>(
               <button key={c} onClick={()=>setFilter(c)} style={{fontFamily:F.mono,fontSize:10,textTransform:"uppercase",letterSpacing:"0.13em",padding:"8px 16px",borderRadius:99,cursor:"pointer",transition:"all .2s",background:filter===c?C.grove:"rgba(242,239,232,0.04)",color:filter===c?C.mist:"rgba(242,239,232,0.35)",border:`1px solid ${filter===c?C.grove:"rgba(242,239,232,0.08)"}`}}>
@@ -42,12 +45,28 @@ export default function ProofPage(){
               </button>
             ))}
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}} className="grid-4">
+
+          {/* Deployments grid — responsive */}
+          <div style={{
+            display:"grid",
+            gridTemplateColumns:"repeat(auto-fill, minmax(280px, 1fr))",
+            gap:16,
+            width:"100%",
+            boxSizing:"border-box",
+          }}>
             {shown.map((d,i)=>{
               const color=catColors[d.cat]||C.grove;
               return(
                 <Reveal key={d.id} delay={i*50}>
-                  <div style={{borderRadius:10,padding:24,background:"rgba(242,239,232,0.02)",border:"1px solid rgba(242,239,232,0.07)",borderTop:`2px solid ${color}`,display:"flex",flexDirection:"column"}}>
+                  <div style={{
+                    borderRadius:10,padding:24,
+                    background:"rgba(242,239,232,0.02)",
+                    border:"1px solid rgba(242,239,232,0.07)",
+                    borderTop:`2px solid ${color}`,
+                    display:"flex",flexDirection:"column",
+                    boxSizing:"border-box",
+                    width:"100%",
+                  }}>
                     <div style={{display:"flex",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:6}}>
                       <span style={{fontFamily:F.mono,fontSize:9,textTransform:"uppercase",color:"rgba(242,239,232,0.25)"}}>{d.month}</span>
                       <span style={{fontFamily:F.mono,fontSize:9,padding:"3px 8px",borderRadius:99,background:d.status==="complete"?"rgba(26,92,50,0.14)":"rgba(201,146,14,0.1)",color:d.status==="complete"?C.grove3:C.amber}}>

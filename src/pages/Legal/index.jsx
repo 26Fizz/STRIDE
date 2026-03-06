@@ -83,7 +83,7 @@ export const PRIVACY_S = [
   },
   {
     heading: "Grievance redressal",
-    body: "Grievance Officer: Hafiz Patel, Founder, Stride Ventures. Contact: connect@strideindia.in · +91 94811 11786. Address: Khasabag, Belagavi, Karnataka – 590003. We acknowledge within 48 hours and resolve within 15 working days."
+    body: "Grievance Officer: Hafiz Patel, Founder, Stride Ventures. Contact: connect@strideindia.in · +91 94811 11786. Address: Belagavi, Karnataka – 590003. We acknowledge within 48 hours and resolve within 15 working days."
   },
   {
     heading: "Governing law",

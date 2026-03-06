@@ -47,7 +47,7 @@ export default function Footer() {
             {[
               "connect@strideindia.in",
               "+91 94811 11786",
-              "Khasabag, Belagavi, Karnataka – 590003"
+              "Belagavi, Karnataka – 590003"
             ].map(t => (
               <p key={t} style={{ fontFamily: F.body, fontSize: 13, color: "rgba(242,239,232,0.3)", lineHeight: 1.7, fontWeight: 300 }}>{t}</p>
             ))}

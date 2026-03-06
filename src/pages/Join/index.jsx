@@ -1,10 +1,12 @@
 // ─── JOIN PAGE ────────────────────────────────────────────────────────────────
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { C, F } from '../../data';
 import SectionLabel from '../../components/SectionLabel';
 
 export default function JoinPage(){
+  const navigate = useNavigate();
   const [step,setStep]=useState(1);
   const [form,setForm]=useState({name:"",whatsapp:"",email:"",cause:"No preference"});
   const [agree,setAgree]=useState(false);
@@ -31,6 +33,13 @@ export default function JoinPage(){
     transition:"border-color .18s, box-shadow .18s",
   });
   const lbl={display:"block",fontFamily:F.mono,fontSize:10,textTransform:"uppercase",letterSpacing:"0.14em",color:"rgba(242,239,232,0.3)",marginBottom:8};
+
+  const linkStyle={
+    color:"rgba(242,239,232,0.75)",
+    borderBottom:"1px solid rgba(242,239,232,0.3)",
+    cursor:"pointer",
+    paddingBottom:1,
+  };
 
   return(
     <section style={{minHeight:"100svh",padding:"120px 20px 80px",background:"linear-gradient(160deg,#0d0d0b,#0a0f09)"}}>
@@ -97,13 +106,41 @@ export default function JoinPage(){
                 <div style={{fontFamily:F.mono,fontSize:9,textTransform:"uppercase",letterSpacing:"0.12em",color:"rgba(242,239,232,0.22)"}}>Billed every Monday · Cancel anytime</div>
               </div>
             </div>
+
+            {/* Checkbox — clean, age confirmation separate */}
             <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:4}}>
-              <input type="checkbox" id="agree" checked={agree} onChange={e=>setAgree(e.target.checked)} style={{accentColor:C.grove,width:16,height:16,marginTop:2,cursor:"pointer",flexShrink:0}}/>
-              <label htmlFor="agree" style={{fontFamily:F.body,fontSize:13,color:"rgba(242,239,232,0.42)",lineHeight:1.6,cursor:"pointer",fontWeight:300}}>I agree to Stride's <span style={{color:"rgba(242,239,232,0.6)",borderBottom:"1px solid rgba(242,239,232,0.2)"}}>Terms of Service</span> and <span style={{color:"rgba(242,239,232,0.6)",borderBottom:"1px solid rgba(242,239,232,0.2)"}}>Privacy Policy</span>.</label>
+              <input
+                type="checkbox"
+                id="agree"
+                checked={agree}
+                onChange={e=>setAgree(e.target.checked)}
+                style={{accentColor:C.grove,width:16,height:16,marginTop:3,cursor:"pointer",flexShrink:0}}
+              />
+              <label htmlFor="agree" style={{fontFamily:F.body,fontSize:13,color:"rgba(242,239,232,0.42)",lineHeight:1.6,fontWeight:300}}>
+                I agree to Stride's{" "}
+                <span
+                  style={linkStyle}
+                  onClick={e=>{e.preventDefault();e.stopPropagation();navigate("/terms");}}
+                >
+                  Terms of Service
+                </span>
+                {" "}and{" "}
+                <span
+                  style={linkStyle}
+                  onClick={e=>{e.preventDefault();e.stopPropagation();navigate("/privacy");}}
+                >
+                  Privacy Policy
+                </span>
+                .
+              </label>
             </div>
-            <p style={{fontFamily:F.body,fontSize:11,color:"rgba(242,239,232,0.18)",lineHeight:1.6,marginBottom:6,fontWeight:300,paddingLeft:26}}>By continuing you confirm you are 18 years or older.</p>
+            <p style={{fontFamily:F.body,fontSize:11,color:"rgba(242,239,232,0.18)",lineHeight:1.6,marginBottom:6,fontWeight:300,paddingLeft:26}}>
+              By continuing you confirm you are 18 years or older.
+            </p>
             {errors.agree&&<p style={{fontFamily:F.body,fontSize:11,color:"#f87171",marginBottom:12}}>{errors.agree}</p>}
-            <p style={{fontFamily:F.body,fontSize:12,color:"rgba(242,239,232,0.24)",lineHeight:1.65,marginBottom:16,fontWeight:300}}>You'll be redirected to our secure payment partner to authorise your Weekly Stride membership. Cancel anytime from your dashboard.</p>
+            <p style={{fontFamily:F.body,fontSize:12,color:"rgba(242,239,232,0.24)",lineHeight:1.65,marginBottom:16,fontWeight:300}}>
+              You'll be redirected to our secure payment partner to authorise your Weekly Stride membership. Cancel anytime from your dashboard.
+            </p>
             <div style={{display:"flex",gap:10}}>
               <button onClick={()=>setStep(1)} style={{flex:1,fontFamily:F.body,fontSize:13,fontWeight:500,padding:"14px",borderRadius:8,border:"1px solid rgba(242,239,232,0.1)",background:"none",color:"rgba(242,239,232,0.38)",cursor:"pointer"}}>← Back</button>
               <button onClick={handleNext} style={{flex:2,fontFamily:F.body,fontSize:14,fontWeight:600,padding:"14px",borderRadius:8,border:"none",cursor:"pointer",background:C.grove,color:C.mist,transition:"background .2s"}}
