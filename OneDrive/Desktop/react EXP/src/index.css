@@ -1,0 +1,41 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: #0d0d0b; color: #f2efe8; font-family: 'DM Sans', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+::selection { background: #1a5c32; color: #f2efe8; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0d0d0b; }
+::-webkit-scrollbar-thumb { background: #2a2a24; border-radius: 2px; }
+input, select, textarea, button { font-family: inherit; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes drift { 0%, 100% { transform: translateY(0px) rotate(-0.3deg); } 50% { transform: translateY(-10px) rotate(0.3deg); } }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes ripple { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.8); opacity: 0; } }
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+.anim-drift { animation: drift 6s ease-in-out infinite; }
+.anim-blink { animation: blink 1.4s step-end infinite; }
+.anim-ripple { animation: ripple 2s ease-out infinite; }
+.anim-marquee { animation: marquee 32s linear infinite; }
+.anim-fadein { animation: fadeIn .4s ease both; }
+
+.reveal { transition: opacity .7s ease, transform .7s cubic-bezier(.22, 1, .36, 1); }
+.reveal-hidden { opacity: 0; transform: translateY(20px); }
+.reveal-visible { opacity: 1; transform: translateY(0); }
+
+@media(max-width: 768px) {
+  .hide-mobile { display: none !important; }
+  .show-mobile { display: flex !important; }
+  .grid-hero { grid-template-columns: 1fr !important; }
+  .grid-2 { grid-template-columns: 1fr !important; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .grid-stats { grid-template-columns: repeat(3, 1fr) !important; }
+  .timeline-left { display: none !important; }
+  .deploy-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .nav-pad { padding: 14px 20px !important; }
+}
+@media(min-width: 769px) { .show-mobile { display: none !important; } }
