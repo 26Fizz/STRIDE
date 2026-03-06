@@ -10,7 +10,8 @@ import Reveal from '../../components/Reveal';
 import MarqueeStrip from '../../components/MarqueeStrip';
 import MemberCard from '../../components/MemberCard';
 
-function Hero({setPage}){
+function Hero(){
+  const navigate = useNavigate();
   const [phase,setPhase]=useState(0);
   const [pool,setPool]=useState(14280);
   const [poolFlash,setPoolFlash]=useState(false);
@@ -54,13 +55,11 @@ function Hero({setPage}){
       justifyContent:"center",
       position:"relative",overflow:"hidden",
     }}>
-
       {/* Grain */}
       <div style={{position:"absolute",inset:0,opacity:.032,pointerEvents:"none",
         backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
         backgroundSize:"160px 160px",
       }}/>
-
       {/* Green glow */}
       <div style={{
         position:"absolute",bottom:"-20%",left:"-10%",
@@ -79,7 +78,6 @@ function Hero({setPage}){
         gap:mob?0:56,
         justifyContent:"space-between",
       }}>
-
         {/* ── COPY COLUMN ── */}
         <div style={{
           flex:"1 1 0",minWidth:0,
@@ -87,7 +85,6 @@ function Hero({setPage}){
           textAlign:mob?"center":"left",
           maxWidth:mob?"100%":600,
         }}>
-
           {/* 1 — Live badge */}
           <div style={{...fade(1),marginBottom:mob?24:36,display:"flex",justifyContent:mob?"center":"flex-start"}}>
             <div style={{display:"inline-flex",alignItems:"center",gap:8}}>
@@ -172,7 +169,7 @@ function Hero({setPage}){
             }}>make it real.</div>
 
             <button
-              onClick={()=>setPage("join")}
+              onClick={()=>navigate("/join")}
               style={{
                 display:"inline-block",
                 fontFamily:F.display,
@@ -196,7 +193,7 @@ function Hero({setPage}){
               justifyContent:mob?"center":"flex-start",
             }}>
               <button
-                onClick={()=>setPage("proof")}
+                onClick={()=>navigate("/proof")}
                 style={{
                   fontFamily:F.mono,fontSize:mob?8:9,
                   background:"none",border:"none",cursor:"pointer",
@@ -225,8 +222,7 @@ function Hero({setPage}){
               </>}
             </div>
           </div>
-
-        </div>{/* end COPY */}
+        </div>
 
         {/* ── CARD — desktop only ── */}
         {!mob&&(
@@ -257,7 +253,6 @@ function Hero({setPage}){
             </div>
           </div>
         )}
-
       </div>
 
       <div style={{
@@ -265,7 +260,6 @@ function Hero({setPage}){
         background:"linear-gradient(transparent,rgba(11,12,10,0.5))",
         pointerEvents:"none",
       }}/>
-
     </section>
   );
 }
@@ -294,12 +288,12 @@ function StatsBar(){
   );
 }
 
-function WhatStrideIs({setPage}){
+function WhatStrideIs(){
+  const navigate = useNavigate();
   const [ref,v]=useReveal();
   return(
     <section ref={ref} style={{padding:"88px 40px",background:C.ink}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
-        {/* Manifesto block */}
         <div className="reveal" style={{...(v?{opacity:1,transform:"none"}:{opacity:0,transform:"translateY(24px)"}),transitionDelay:"0ms",marginBottom:72}}>
           <SectionLabel light>The honest truth</SectionLabel>
           <div style={{fontFamily:F.display,fontStyle:"italic",lineHeight:1.18,letterSpacing:"-0.01em",maxWidth:900,fontSize:"clamp(24px,3.8vw,48px)"}}>
@@ -311,7 +305,6 @@ function WhatStrideIs({setPage}){
           </div>
           <div style={{height:1,maxWidth:240,marginTop:28,background:"linear-gradient(90deg,#1a5c32,transparent)"}}/>
         </div>
-        {/* Two col */}
         <div className="grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:72,alignItems:"start"}}>
           <div className="reveal" style={{...(v?{opacity:1,transform:"none"}:{opacity:0,transform:"translateY(24px)"}),transitionDelay:"100ms"}}>
             <h2 style={{fontFamily:F.display,fontSize:"clamp(28px,3.5vw,44px)",fontWeight:600,lineHeight:1.1,letterSpacing:"-0.02em",marginBottom:20}}>
@@ -320,14 +313,13 @@ function WhatStrideIs({setPage}){
             </h2>
             <p style={{fontFamily:F.body,fontSize:15,color:"rgba(242,239,232,0.42)",lineHeight:1.85,marginBottom:16,fontWeight:300}}>Stride is a promise to yourself. ₹10 every Monday. Automatically. To a verified NGO. With published proof within 7 days.</p>
             <p style={{fontFamily:F.body,fontSize:15,color:"rgba(242,239,232,0.42)",lineHeight:1.85,marginBottom:28,fontWeight:300}}>Not once. Not when you remember. Not when you feel guilty enough. Every week. Without thinking about it. That's what consistency looks like. That's what actually changes things.</p>
-            <button onClick={()=>setPage("how")} style={{background:"none",border:"none",cursor:"pointer",fontFamily:F.body,fontSize:13,fontWeight:500,color:"rgba(242,239,232,0.38)",borderBottom:"1px solid rgba(242,239,232,0.14)",paddingBottom:2,transition:"all .2s"}}
+            <button onClick={()=>navigate("/how-it-works")} style={{background:"none",border:"none",cursor:"pointer",fontFamily:F.body,fontSize:13,fontWeight:500,color:"rgba(242,239,232,0.38)",borderBottom:"1px solid rgba(242,239,232,0.14)",paddingBottom:2,transition:"all .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.color=C.mist;e.currentTarget.style.borderColor="rgba(242,239,232,0.4)"}}
               onMouseLeave={e=>{e.currentTarget.style.color="rgba(242,239,232,0.38)";e.currentTarget.style.borderColor="rgba(242,239,232,0.14)"}}>
               See exactly how it works →
             </button>
           </div>
           <div className="reveal" style={{...(v?{opacity:1,transform:"none"}:{opacity:0,transform:"translateY(24px)"}),transitionDelay:"180ms",display:"flex",flexDirection:"column",gap:10}}>
-            {/* Live pool card */}
             <div style={{borderRadius:12,padding:20,background:"rgba(26,92,50,0.1)",border:"1px solid rgba(26,92,50,0.18)"}}>
               <div style={{fontFamily:F.mono,fontSize:9,textTransform:"uppercase",letterSpacing:"0.14em",color:"rgba(26,92,50,0.6)",marginBottom:10}}>This month · Education</div>
               <div style={{fontFamily:F.display,fontSize:34,fontWeight:600,color:C.mist,letterSpacing:"-0.02em",lineHeight:1,marginBottom:4}}>₹14,280</div>
@@ -340,9 +332,8 @@ function WhatStrideIs({setPage}){
                 <span style={{fontFamily:F.mono,fontSize:9,color:"rgba(26,92,50,0.6)"}}>Deploys Apr 1</span>
               </div>
             </div>
-            {/* What ₹10 joins */}
             <div style={{borderRadius:12,padding:20,background:"rgba(242,239,232,0.025)",border:"1px solid rgba(242,239,232,0.07)"}}>
-              <div style={{fontFamily:F.mono,fontSize:9,textTransform:"uppercase",letterSpacing:"0.14em",color:"rgba(242,239,232,0.22)",marginBottom:14}}>What 380 members did last month</div>
+              <div style={{fontFamily:F.mono,fontSize:9,textTransform:"uppercase",letterSpacing:"0.14em",color:"rgba(242,239,232,0.22)",marginBottom:14}}>What last month's pool did</div>
               {[["📚","38 children got learning materials in Barmer, Rajasthan"],["🏥","124 patients saw a doctor in Bilaspur who otherwise couldn't"],["💧","340 families got clean water in Ganjam, Odisha"]].map(([icon,text])=>(
                 <div key={text} style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:10}}>
                   <span style={{fontSize:13,flexShrink:0,marginTop:1}}>{icon}</span>
@@ -350,7 +341,6 @@ function WhatStrideIs({setPage}){
                 </div>
               ))}
             </div>
-            {/* Proof guarantee */}
             <div style={{borderRadius:12,padding:"14px 16px",background:"rgba(26,92,50,0.08)",border:"1px solid rgba(26,92,50,0.14)",display:"flex",alignItems:"center",gap:10}}>
               <span style={{fontSize:14}}>✅</span>
               <span style={{fontFamily:F.body,fontSize:12,color:"rgba(26,92,50,0.85)",fontWeight:500,lineHeight:1.55}}>Every deployment above came with published bank proof within 7 days.</span>
@@ -362,7 +352,8 @@ function WhatStrideIs({setPage}){
   );
 }
 
-function WeeklyRhythm({setPage}){
+function WeeklyRhythm(){
+  const navigate = useNavigate();
   const [ref,v]=useReveal();
   return(
     <section ref={ref} style={{padding:"88px 40px",background:"#0f1a0e",borderTop:"1px solid rgba(242,239,232,0.04)"}}>
@@ -376,7 +367,7 @@ function WeeklyRhythm({setPage}){
                 <span style={{color:"rgba(242,239,232,0.3)",fontStyle:"italic",fontWeight:400}}>Same time, every week.</span>
               </h2>
             </div>
-            <button onClick={()=>setPage("how")} style={{fontFamily:F.body,fontSize:13,fontWeight:500,padding:"11px 20px",borderRadius:6,border:"1px solid rgba(242,239,232,0.1)",background:"none",cursor:"pointer",color:"rgba(242,239,232,0.38)",transition:"all .2s",flexShrink:0}}
+            <button onClick={()=>navigate("/how-it-works")} style={{fontFamily:F.body,fontSize:13,fontWeight:500,padding:"11px 20px",borderRadius:6,border:"1px solid rgba(242,239,232,0.1)",background:"none",cursor:"pointer",color:"rgba(242,239,232,0.38)",transition:"all .2s",flexShrink:0}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(242,239,232,0.25)";e.currentTarget.style.color="rgba(242,239,232,0.7)"}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(242,239,232,0.1)";e.currentTarget.style.color="rgba(242,239,232,0.38)"}}>
               Full walkthrough →
@@ -400,7 +391,8 @@ function WeeklyRhythm({setPage}){
   );
 }
 
-function ProofPreview({setPage}){
+function ProofPreview(){
+  const navigate = useNavigate();
   const complete=DEPLOYMENTS.filter(d=>d.status==="complete").slice(0,2);
   return(
     <section style={{padding:"88px 40px",background:C.ink,borderTop:"1px solid rgba(242,239,232,0.04)"}}>
@@ -414,7 +406,7 @@ function ProofPreview({setPage}){
                 <span style={{color:C.grove,fontStyle:"italic",fontWeight:500}}>We show you the receipts.</span>
               </h2>
             </div>
-            <button onClick={()=>setPage("proof")} style={{fontFamily:F.body,fontSize:13,fontWeight:500,padding:"11px 20px",borderRadius:6,border:"1px solid rgba(242,239,232,0.1)",background:"none",cursor:"pointer",color:"rgba(242,239,232,0.38)",transition:"all .2s",flexShrink:0}}
+            <button onClick={()=>navigate("/proof")} style={{fontFamily:F.body,fontSize:13,fontWeight:500,padding:"11px 20px",borderRadius:6,border:"1px solid rgba(242,239,232,0.1)",background:"none",cursor:"pointer",color:"rgba(242,239,232,0.38)",transition:"all .2s",flexShrink:0}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(242,239,232,0.25)";e.currentTarget.style.color="rgba(242,239,232,0.7)"}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(242,239,232,0.1)";e.currentTarget.style.color="rgba(242,239,232,0.38)"}}>
               All 18 deployments →
@@ -441,7 +433,7 @@ function ProofPreview({setPage}){
         <Reveal delay={200}>
           <div style={{borderRadius:10,padding:"14px 20px",background:"rgba(26,92,50,0.08)",border:"1px solid rgba(26,92,50,0.14)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
             <span style={{fontFamily:F.body,fontSize:13,color:"rgba(26,92,50,0.8)",fontWeight:500}}>📋 18 deployments. 18 proof reports. Every single one, on time.</span>
-            <button onClick={()=>setPage("proof")} style={{fontFamily:F.body,fontSize:12,fontWeight:600,padding:"9px 18px",borderRadius:6,border:"1px solid rgba(26,92,50,0.28)",background:"rgba(26,92,50,0.2)",color:C.grove3,cursor:"pointer",transition:"background .2s"}}
+            <button onClick={()=>navigate("/proof")} style={{fontFamily:F.body,fontSize:12,fontWeight:600,padding:"9px 18px",borderRadius:6,border:"1px solid rgba(26,92,50,0.28)",background:"rgba(26,92,50,0.2)",color:C.grove3,cursor:"pointer",transition:"background .2s"}}
               onMouseEnter={e=>e.currentTarget.style.background="rgba(26,92,50,0.35)"}
               onMouseLeave={e=>e.currentTarget.style.background="rgba(26,92,50,0.2)"}>
               See every receipt →
@@ -453,7 +445,8 @@ function ProofPreview({setPage}){
   );
 }
 
-function CausesPreview({setPage}){
+function CausesPreview(){
+  const navigate = useNavigate();
   return(
     <section style={{padding:"88px 40px",background:"#0a0f09",borderTop:"1px solid rgba(242,239,232,0.04)"}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
@@ -466,7 +459,7 @@ function CausesPreview({setPage}){
                 <span style={{color:"rgba(242,239,232,0.3)",fontStyle:"italic",fontWeight:400}}>You always know where you stand.</span>
               </h2>
             </div>
-            <button onClick={()=>setPage("causes")} style={{fontFamily:F.body,fontSize:13,fontWeight:500,padding:"11px 20px",borderRadius:6,border:"1px solid rgba(242,239,232,0.1)",background:"none",cursor:"pointer",color:"rgba(242,239,232,0.38)",transition:"all .2s",flexShrink:0}}
+            <button onClick={()=>navigate("/causes")} style={{fontFamily:F.body,fontSize:13,fontWeight:500,padding:"11px 20px",borderRadius:6,border:"1px solid rgba(242,239,232,0.1)",background:"none",cursor:"pointer",color:"rgba(242,239,232,0.38)",transition:"all .2s",flexShrink:0}}
               onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(242,239,232,0.25)";e.currentTarget.style.color="rgba(242,239,232,0.7)"}}
               onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(242,239,232,0.1)";e.currentTarget.style.color="rgba(242,239,232,0.38)"}}>
               Explore causes →
@@ -476,7 +469,7 @@ function CausesPreview({setPage}){
         <div className="grid-4" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
           {CAUSES.map((c,i)=>(
             <Reveal key={c.id} delay={i*70}>
-              <div onClick={()=>setPage("causes")} style={{borderRadius:10,padding:20,background:"rgba(242,239,232,0.02)",border:"1px solid rgba(242,239,232,0.06)",borderTop:`2px solid ${c.color}`,cursor:"pointer",height:"100%",display:"flex",flexDirection:"column",transition:"all .2s"}}
+              <div onClick={()=>navigate("/causes")} style={{borderRadius:10,padding:20,background:"rgba(242,239,232,0.02)",border:"1px solid rgba(242,239,232,0.06)",borderTop:`2px solid ${c.color}`,cursor:"pointer",height:"100%",display:"flex",flexDirection:"column",transition:"all .2s"}}
                 onMouseEnter={e=>{e.currentTarget.style.background="rgba(242,239,232,0.04)";e.currentTarget.style.transform="translateY(-2px)"}}
                 onMouseLeave={e=>{e.currentTarget.style.background="rgba(242,239,232,0.02)";e.currentTarget.style.transform="none"}}>
                 <div style={{width:34,height:34,borderRadius:8,background:`${c.color}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,marginBottom:12}}>{c.icon}</div>
@@ -495,7 +488,8 @@ function CausesPreview({setPage}){
   );
 }
 
-function HomeCTA({setPage}){
+function HomeCTA(){
+  const navigate = useNavigate();
   return(
     <section style={{padding:"112px 40px",background:"linear-gradient(160deg,#0a0f09,#0d1a0c,#080a07)",position:"relative",overflow:"hidden"}}>
       <div style={{position:"absolute",inset:0,pointerEvents:"none",background:"radial-gradient(ellipse 60% 50% at 50% 100%,rgba(26,92,50,0.18),transparent 70%)"}}/>
@@ -512,7 +506,7 @@ function HomeCTA({setPage}){
             <span style={{fontFamily:F.display,fontSize:"clamp(64px,8vw,88px)",fontWeight:600,color:C.mist,lineHeight:1,letterSpacing:"-0.03em"}}>₹10</span>
             <span style={{fontFamily:F.body,fontSize:16,color:"rgba(242,239,232,0.25)",marginLeft:8}}>/week</span>
           </div>
-          <button onClick={()=>setPage("join")} style={{width:"100%",fontFamily:F.body,fontSize:15,fontWeight:600,padding:"18px 40px",borderRadius:8,border:"none",cursor:"pointer",background:C.mist,color:C.ink,marginBottom:16,transition:"all .2s"}}
+          <button onClick={()=>navigate("/join")} style={{width:"100%",fontFamily:F.body,fontSize:15,fontWeight:600,padding:"18px 40px",borderRadius:8,border:"none",cursor:"pointer",background:C.mist,color:C.ink,marginBottom:16,transition:"all .2s"}}
             onMouseEnter={e=>{e.currentTarget.style.background="#fff";e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 16px 48px rgba(242,239,232,0.14)"}}
             onMouseLeave={e=>{e.currentTarget.style.background=C.mist;e.currentTarget.style.transform="none";e.currentTarget.style.boxShadow="none"}}>
             I'm done with one-time. Start my streak →
@@ -523,7 +517,6 @@ function HomeCTA({setPage}){
     </section>
   );
 }
-
 
 export default function HomePage(){
   return(
