@@ -18,7 +18,7 @@ export default function DashboardPage(){
   }));
 
   return(
-    <section style={{minHeight:"100svh",padding:"104px 40px 64px",background:C.ink}}>
+    <section style={{minHeight:"100svh",padding:"104px 20px 64px",background:C.ink}}>
       <div style={{maxWidth:1100,margin:"0 auto"}}>
         <Reveal>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:44,flexWrap:"wrap",gap:20}}>
@@ -37,7 +37,7 @@ export default function DashboardPage(){
         </Reveal>
 
         {/* Tabs */}
-        <div style={{display:"flex",gap:0,marginBottom:32,borderBottom:"1px solid rgba(242,239,232,0.07)",overflowX:"auto"}}>
+        <div style={{display:"flex",gap:0,marginBottom:32,borderBottom:"1px solid rgba(242,239,232,0.07)",overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
           {TABS.map(t=>(
             <button key={t} onClick={()=>setTab(t)} style={{fontFamily:F.mono,fontSize:10,textTransform:"uppercase",letterSpacing:"0.13em",padding:"11px 20px",background:"none",border:"none",borderBottom:`2px solid ${tab===t?C.grove:"transparent"}`,color:tab===t?C.mist:"rgba(242,239,232,0.3)",cursor:"pointer",transition:"all .2s",whiteSpace:"nowrap",flexShrink:0}}>
               {t}
@@ -81,27 +81,33 @@ export default function DashboardPage(){
         )}
 
         {tab==="History"&&(
-          <div style={{borderRadius:12,overflow:"hidden",border:"1px solid rgba(242,239,232,0.07)"}}>
-            <table style={{width:"100%",borderCollapse:"collapse"}}>
+          <div style={{
+            borderRadius:12,
+            border:"1px solid rgba(242,239,232,0.07)",
+            overflowX:"auto",
+            WebkitOverflowScrolling:"touch",
+            width:"100%",
+          }}>
+            <table style={{width:"100%",borderCollapse:"collapse",minWidth:480}}>
               <thead>
                 <tr style={{background:"rgba(242,239,232,0.03)"}}>
                   {["Week","Date","Category","Status","Amount"].map(h=>(
-                    <th key={h} style={{textAlign:"left",padding:"12px 16px",fontFamily:F.mono,fontSize:9,textTransform:"uppercase",letterSpacing:"0.13em",color:"rgba(242,239,232,0.24)",borderBottom:"1px solid rgba(242,239,232,0.07)"}}>{h}</th>
+                    <th key={h} style={{textAlign:"left",padding:"12px 16px",fontFamily:F.mono,fontSize:9,textTransform:"uppercase",letterSpacing:"0.13em",color:"rgba(242,239,232,0.24)",borderBottom:"1px solid rgba(242,239,232,0.07)",whiteSpace:"nowrap"}}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {WEEKS.map((w,i)=>(
                   <tr key={i} style={{borderBottom:"1px solid rgba(242,239,232,0.04)"}}>
-                    <td style={{padding:"11px 16px",fontFamily:F.mono,fontSize:11,color:C.grove,fontWeight:500}}>#{w.n}</td>
-                    <td style={{padding:"11px 16px",fontFamily:F.body,fontSize:12,color:"rgba(242,239,232,0.38)"}}>{w.date}, {w.year}</td>
-                    <td style={{padding:"11px 16px",fontFamily:F.body,fontSize:12,color:C.mist}}>{w.cat}</td>
-                    <td style={{padding:"11px 16px"}}>
+                    <td style={{padding:"11px 16px",fontFamily:F.mono,fontSize:11,color:C.grove,fontWeight:500,whiteSpace:"nowrap"}}>#{w.n}</td>
+                    <td style={{padding:"11px 16px",fontFamily:F.body,fontSize:12,color:"rgba(242,239,232,0.38)",whiteSpace:"nowrap"}}>{w.date}, {w.year}</td>
+                    <td style={{padding:"11px 16px",fontFamily:F.body,fontSize:12,color:C.mist,whiteSpace:"nowrap"}}>{w.cat}</td>
+                    <td style={{padding:"11px 16px",whiteSpace:"nowrap"}}>
                       <span style={{fontFamily:F.mono,fontSize:9,padding:"3px 8px",borderRadius:99,background:w.status==="Deployed"?"rgba(26,92,50,0.14)":"rgba(201,146,14,0.1)",color:w.status==="Deployed"?C.grove3:C.amber}}>
                         {w.status}
                       </span>
                     </td>
-                    <td style={{padding:"11px 16px",fontFamily:F.display,fontSize:14,fontWeight:500,color:C.mist}}>₹10</td>
+                    <td style={{padding:"11px 16px",fontFamily:F.display,fontSize:14,fontWeight:500,color:C.mist,whiteSpace:"nowrap"}}>₹10</td>
                   </tr>
                 ))}
               </tbody>
